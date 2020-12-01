@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "In.h"
+#include "InputFileReader.h"
 #include "Error.h"
-#include "IT.h"
+#include "IdTable.h"
 
-TTM::InputFileReader::InputFileReader() :
-	m_fileSize(0), m_linesCount(1), m_ignoredCharsCount(0), m_fileText(""), m_codeTable{ IN_CODE_TABLE }
+TTM::InputFileReader::InputFileReader()
+	: m_fileSize(0), m_linesCount(1), m_ignoredCharsCount(0), m_fileText(""), m_codeTable{ IN_CODE_TABLE }
 {	}
 
 void TTM::InputFileReader::read(const char* inFilePath)
@@ -20,45 +20,45 @@ void TTM::InputFileReader::read(const char* inFilePath)
 	for (int readChar = 0, column = 0; (readChar = inputFile.get()) != EOF; ++m_fileSize)
 	{
 		++column;
-		if (readChar == IN_CODE_ENDL) {
+		if (readChar == in::endl) {
 			++m_linesCount;
 			column = 0;
 		}
 
 		switch (m_codeTable[readChar])
 		{
-		case IN::T:
+		case in::T:
 			m_fileText.push_back(readChar);
 			break;
 
-		case IN::Q:
+		case in::Q:
 			do
 			{
 				m_fileText.push_back(readChar);
 				readChar = inputFile.get();
 				++m_fileSize;
 				++column;
-			} while (m_codeTable[readChar] != IN::Q && column <= TI_STR_MAXSIZE);
+			} while (m_codeTable[readChar] != in::Q && column <= TI_STR_MAXSIZE);
 			m_fileText.push_back(readChar);
 			break;
 
-		case IN::O:
-			if (!m_fileText.empty() && m_fileText.back() != IN_CODE_DELIM)
-				m_fileText.push_back(IN_CODE_DELIM);
+		case in::O:
+			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
+				m_fileText.push_back(in::delimiter);
 			m_fileText.push_back(readChar);
-			m_fileText.push_back(IN_CODE_DELIM);
+			m_fileText.push_back(in::delimiter);
 			break;
 
-		case IN::I:
+		case in::I:
 			++m_ignoredCharsCount;
 			break;
 
-		case IN::F:
+		case in::F:
 			throw ERROR_THROW_IN(111, m_linesCount, column);
 			break;
 
 		default:
-			if (!m_fileText.empty() && m_fileText.back() != IN_CODE_DELIM)
+			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
 				m_fileText.push_back(m_codeTable[readChar]);
 			break;
 		}

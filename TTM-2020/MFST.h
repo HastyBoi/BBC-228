@@ -1,7 +1,7 @@
 #pragma once
 #include <stack>
 #include "Greibach.h"
-#include "LT.h"
+#include "LexTable.h"
 #include "Error.h"
 
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
@@ -106,12 +106,12 @@ namespace MFST {
 		short nrulechain;
 		short tape_size;
 		GRB::Greibach greibach;
-		LT::LexTable lex;
+		TTM::LexTable lex;
 		MFSTSTACK st;
 		use_container<std::stack<MfstState>> storestate;
 
 		Mfst();
-		Mfst(LT::LexTable lextable, GRB::Greibach greibach);
+		Mfst(TTM::LexTable lextable, GRB::Greibach greibach);
 
 		std::string getCSt();
 		std::string getCTape(short pos, short n = 25);

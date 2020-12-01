@@ -24,20 +24,20 @@ MFST::Mfst::MfstDiagnosis::MfstDiagnosis(short tape_position, RC_STEP rc_step, s
 {	}
 
 MFST::Mfst::Mfst()
-	: tape(0), tape_size(0), tape_position(0), lex(LT::Create(0)), nrule(-1), nrulechain(-1)
+	: tape(0), tape_size(0), tape_position(0), lex(TTM::LexTable()), nrule(-1), nrulechain(-1)
 {	}
 
-MFST::Mfst::Mfst(LT::LexTable lex, GRB::Greibach greibach)
-	: lex(lex), greibach(greibach), tape_position(0), nrule(-1), nrulechain(-1), tape_size(lex.size)
+MFST::Mfst::Mfst(TTM::LexTable lex, GRB::Greibach greibach)
+	: lex(lex), greibach(greibach), tape_position(0), nrule(-1), nrulechain(-1), tape_size(/*lex.size*/)
 {
-	tape = DBG_NEW short[tape_size];
+	/*tape = DBG_NEW short[tape_size];
 
 	for (int k = 0; k < tape_size; ++k) {
 		tape[k] = GRB::TS(lex.table[k].lexeme);
 	}
 
 	st.push(greibach.stbottomT);
-	st.push(greibach.startN);
+	st.push(greibach.startN);*/
 }
 
 std::string MFST::Mfst::getCSt() {
@@ -72,7 +72,7 @@ std::string MFST::Mfst::getDiagnosis(short n) {
 	if (n < MFST_DIAGN_NUMBER && (lpos = diagnosis[n].tape_position) >= 0) {
 		errid = greibach.getRule(diagnosis[n].nrule).iderror;
 		Error::ERROR err = Error::getErrorByCode(errid);
-		ss << err.id << ": строка " << lex.table[lpos].lineNumber << "," << err.message;
+		//ss << err.id << ": строка " << lex.table[lpos].lineNumber << "," << err.message;
 		output = ss.str();
 	}
 

@@ -2,13 +2,13 @@
 #include "Error.h"
 #include "FST.h"
 #include "Greibach.h"
-#include "In.h"
-#include "IT.h"
-#include "Lexer.h"
-#include "Log.h"
-#include "LT.h"
+#include "InputFileReader.h"
+#include "IdTable.h"
+#include "LexicalAnalyzer.h"
+#include "Logger.h"
+#include "LexTable.h"
 #include "MFST.h"
-#include "Parm.h"
+#include "CommandLineArgumentsParser.h"
 #include "PolishNotation.h"
 #include "SemanticAnalyzer.h"
 #include "CodeGeneration.h"
@@ -23,12 +23,13 @@ void* operator new(size_t sz)
 
 int main(int argc, char** argv)
 {
+	using namespace TTM;
 	std::setlocale(LC_ALL, "rus");
 
 	try
 	{
-		Parm::Parameters commandLineArguments(argc, argv);
-		Log::Logger log(commandLineArguments.logFilePath());
+		CommandLineArgumentsParser commandLineArguments(argc, argv);
+		Logger log(commandLineArguments.logFilePath());
 
 		log.openFile();
 		log << "---- Протокол ------ Дата: ";
@@ -36,35 +37,26 @@ int main(int argc, char** argv)
 
 		auto parametersList = commandLineArguments.getAllParameters();
 		log << "---- Параметры --------\n";
-		for (std::string_view p : parametersList) {
+		for (std::string_view p : parametersList)
+		{
 			log << p << '\n';
 		}
 
-		TTM::InputFileReader in;
+		InputFileReader in;
 		in.read(commandLineArguments.inFilePath());
 
-		auto hihi = TTM::InputFileReader::splitStringByDelimiter(in.fileText(), TTM::IN_CODE_DELIM);
+		log << "---- Исходные данные ------" << '\n' <<
+			"Количество символов: " << in.fileSize() << '\n' <<
+			"Проигнорировано: " << in.ignoredCharsCount() << '\n' <<
+			"Количество строк: " << in.linesCount() << '\n';
 
-		for (auto s : hihi) {
-			std::cout << s << '\n';
-		}
+		auto splitted = InputFileReader::splitStringByDelimiter(in.fileText(), in::delimiter);
 
-		LT::LexTable lextable = LT::Create(1488);
-		IT::IdTable idtable = IT::Create(1488);
-		/*LA::Scan(lextable, idtable, in, commandLineArguments.outFilePath(), log);
+		LexTable lextable(splitted.size());
+		IdTable idtable{};
 
-		MFST_TRACE_START
-			MFST::Mfst mfst(lextable, GRB::getGreibach());
-		mfst.start(std::cout);
+		Scan(lextable, idtable, in, log);
 
-		SA::SemanticAnalyzer sema(lextable, idtable);
-		sema.Start(log);
-
-		CG::Generator CodeBuilder = CG::Generator(lextable, idtable, commandLineArguments.outFilePath());
-		CodeBuilder.Start(log);*/
-
-		LT::Delete(lextable);
-		IT::Delete(idtable);
 		log.closeFile();
 	}
 	catch (Error::ERROR e)

@@ -29,37 +29,31 @@
 #define LEX_SLASH						'/'
 #define LEX_PERCENT						'%'
 #define LEX_ASSIGN						'='
+#define LEX_EQUALS						'q'
+#define LEX_NOT_EQUALS					'!'
+#define LEX_LESS						'<'
+#define LEX_GREATER						'>'
+#define LEX_LESS_OR_EQUALS				'o'
+#define LEX_GREATER_OR_EQUALS			'x'
 
-namespace LT {
-	struct Entry
+namespace TTM {
+	class LexTable
 	{
-		char lexeme;
-		int lineNumber;
-		int idxTI;
-	};
+	public:
+		struct Entry
+		{
+			int lineNumber;
+			int idxTI;
+			std::string lexeme;
+		};
 
-	struct LexTable
-	{
-		int maxsize;
-		int size;
-		Entry* table;
-	};
-
-	LexTable Create(int size);
-	void Add(LexTable& lextable, Entry entry);
-	Entry GetEntry(LexTable& lextable, int n);
-	void Delete(LexTable& lextable);
-
-	class LexemeTable
-	{
-		LexemeTable(int capacity);
+		LexTable(size_t capacity = 0);
 		void AddEntry(const Entry& entry);
 
-		Entry& operator [](int index);
+		Entry& operator [](size_t index);
 
 	private:
-		int m_capacity;
-		int m_size;
 		std::vector<Entry> m_table;
+		size_t m_size;
 	};
 }

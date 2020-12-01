@@ -33,8 +33,10 @@ FST::FST::FST(short ns, NODE n, ...)
 	rstates[0] = 0;
 }
 
-FST::FST::~FST() {
-	for (int i = 0; i < nstates; ++i) {
+FST::FST::~FST()
+{
+	for (int i = 0; i < nstates; ++i)
+	{
 		delete nodes[i].relations;
 		nodes[i].relations = nullptr;
 	}
@@ -46,14 +48,16 @@ FST::FST::~FST() {
 	rstates = nullptr;
 }
 
-bool step(const char* string, FST::FST& fst, short*& rstates) {
+bool step(std::string_view str, FST::FST& fst, short*& rstates)
+{
 	bool output = false;
 
 	std::swap(rstates, fst.rstates);
 	for (short i = 0; i < fst.nstates; ++i)
 		if (rstates[i] == fst.position)
 			for (short j = 0; j < fst.nodes[i].n_relation; ++j)
-				if (fst.nodes[i].relations[j].symbol == string[fst.position]) {
+				if (fst.nodes[i].relations[j].symbol == str[fst.position])
+				{
 					fst.rstates[fst.nodes[i].relations[j].nnode] = fst.position + 1;
 					output = true;
 				}
@@ -61,16 +65,18 @@ bool step(const char* string, FST::FST& fst, short*& rstates) {
 	return output;
 }
 
-bool FST::execute(const char* string, FST& fst) {
+bool FST::execute(std::string_view str, FST& fst)
+{
 	short* rstates = DBG_NEW short[fst.nstates];
-	short lstring = (short)strlen(string);
+	short lstring = (short)str.size();
 	bool output = true;
 
 	memset(rstates, 0xff, sizeof(short) * fst.nstates);
 
-	for (short i = 0; i < lstring && output; ++i) {
+	for (short i = 0; i < lstring && output; ++i)
+	{
 		fst.position++;
-		output = step(string, fst, rstates);
+		output = step(str, fst, rstates);
 	}
 	delete[] rstates;
 

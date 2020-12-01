@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "Parm.h"
+#include "CommandLineArgumentsParser.h"
 #include "Error.h"
 
-Parm::Parameters::Parameters(int argc, char** argv)
+TTM::CommandLineArgumentsParser::CommandLineArgumentsParser(int argc, char** argv)
 {
 	if (argc <= 1 || getOption(argv + 1, argv + argc, delimiter + defaultInKey) == nullptr)
 		throw ERROR_THROW(100);
@@ -18,7 +18,7 @@ Parm::Parameters::Parameters(int argc, char** argv)
 	m_logFilePath = findPathByKey(defaultLogKey);
 }
 
-std::vector<std::string> Parm::Parameters::getAllParameters() const
+std::vector<std::string> TTM::CommandLineArgumentsParser::getAllParameters() const
 {
 	std::vector<std::string> parameters;
 	parameters.reserve(3);
@@ -28,12 +28,12 @@ std::vector<std::string> Parm::Parameters::getAllParameters() const
 	return parameters;
 }
 
-bool Parm::Parameters::optionExists(char** begin, char** end, std::string_view option)
+bool TTM::CommandLineArgumentsParser::optionExists(char** begin, char** end, std::string_view option)
 {
 	return std::find(begin, end, option) != end;
 }
 
-char* Parm::Parameters::getOption(char** begin, char** end, std::string_view option)
+char* TTM::CommandLineArgumentsParser::getOption(char** begin, char** end, std::string_view option)
 {
 	char** itr = std::find(begin, end, option);
 

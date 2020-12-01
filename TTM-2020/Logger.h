@@ -1,10 +1,12 @@
 #pragma once
-#include "In.h"
-#include "Parm.h"
+#include "InputFileReader.h"
+#include "CommandLineArgumentsParser.h"
 #include "Error.h"
 
-namespace Log {
-	class Logger {
+namespace TTM
+{
+	class Logger
+	{
 	public:
 		Logger(std::string_view logFilePath = "log.txt");
 		~Logger();

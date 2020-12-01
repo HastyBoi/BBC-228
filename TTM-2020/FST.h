@@ -1,9 +1,9 @@
 #pragma once
-#include "In.h"
-#include "LT.h"
-#include "IT.h"
-#include "Log.h"
-#include "Parm.h"
+#include "InputFileReader.h"
+#include "LexTable.h"
+#include "IdTable.h"
+#include "Logger.h"
+#include "CommandLineArgumentsParser.h"
 
 #pragma region FST
 
@@ -222,6 +222,58 @@ FST::NODE())
 
 #pragma endregion
 
+#pragma region EQUALS
+
+#define FST_EQUALS FST::FST(3,\
+FST::NODE(1, FST::RELATION('=', 1)),\
+FST::NODE(1, FST::RELATION('=', 2)),\
+FST::NODE())
+
+#pragma endregion
+
+#pragma region NOT_EQUALS
+
+#define FST_NOT_EQUALS FST::FST(3,\
+FST::NODE(1, FST::RELATION('!', 1)),\
+FST::NODE(1, FST::RELATION('=', 1)),\
+FST::NODE())
+
+#pragma endregion
+
+#pragma region LESS
+
+#define FST_LESS FST::FST(2,\
+FST::NODE(1, FST::RELATION('<', 1)),\
+FST::NODE())
+
+#pragma endregion
+
+#pragma region GREATER
+
+#define FST_GREATER FST::FST(2,\
+FST::NODE(1, FST::RELATION('>', 1)),\
+FST::NODE())
+
+#pragma endregion
+
+#pragma region LESS_OR_EQUALS
+
+#define FST_LESS_OR_EQUALS FST::FST(3,\
+FST::NODE(1, FST::RELATION('<', 1)),\
+FST::NODE(1, FST::RELATION('=', 1)),\
+FST::NODE())
+
+#pragma endregion
+
+#pragma region GREATER_OR_EQUALS
+
+#define FST_GREATER_OR_EQUALS FST::FST(3,\
+FST::NODE(1, FST::RELATION('>', 1)),\
+FST::NODE(1, FST::RELATION('=', 1)),\
+FST::NODE())
+
+#pragma endregion
+
 #pragma region IDENTIFIER
 
 #define FST_ID FST::FST(2, \
@@ -293,7 +345,7 @@ FST::NODE())
 
 #define FST_STRING_LITERAL FST::FST(3,\
 FST::NODE(1, FST::RELATION('\'', 1)),\
-FST::NODE(70,\
+FST::NODE(77,\
 FST::RELATION('a', 1),\
 FST::RELATION('b', 1),\
 FST::RELATION('c', 1),\
@@ -363,6 +415,13 @@ FST::RELATION('7', 1),\
 FST::RELATION('8', 1),\
 FST::RELATION('9', 1),\
 FST::RELATION(' ', 1),\
+FST::RELATION('(', 1),\
+FST::RELATION(')', 1),\
+FST::RELATION('{', 1),\
+FST::RELATION('}', 1),\
+FST::RELATION('<', 1),\
+FST::RELATION('>', 1),\
+FST::RELATION('!', 1),\
 FST::RELATION('\'', 2)\
 ),\
 FST::NODE())
@@ -390,32 +449,35 @@ FST::NODE())
 
 #pragma endregion
 
-namespace FST {
-	struct RELATION {			// ребро:символ -> вершина графа переходов КА
-		char symbol;			// символ перехода
-		short nnode;			// номер смежной вершины
+namespace FST
+{
+	struct RELATION
+	{
+		char symbol;
+		short nnode;
 
 		RELATION(char c = 0x00, short ns = NULL);
 	};
 
-	struct NODE {				// вершина графа переходов
-		short n_relation;		// количество инцидентных ребер
-		RELATION* relations;	// инцидентные ребра
+	struct NODE
+	{
+		short n_relation;
+		RELATION* relations;
 
 		NODE();
 		NODE(short n, RELATION rel, ...);
 	};
 
-	struct FST {				// недетерминированный конечный автомат
-		short position;			// текущая позиция в цепочке
-		short nstates;			// количество состояний автомата
-		NODE* nodes;			// граф переходов: [0] - начальное состояние, [nstate-1] - конечное
-		short* rstates;			// возможные состояния автомата на данной позиции
+	struct FST
+	{
+		short position;
+		short nstates;
+		NODE* nodes;
+		short* rstates;
 
 		FST(short ns, NODE n, ...);
 		~FST();
 	};
 
-	// выполнить распознавание цепочки
-	bool execute(const char* string, FST& fst);
+	bool execute(std::string_view string, FST& fst);
 };

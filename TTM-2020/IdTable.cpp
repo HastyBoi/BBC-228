@@ -1,3 +1,3 @@
 #include "pch.h"
-#include "SemanticAnalyzer.h"
+#include "IdTable.h"
 #include "Error.h"

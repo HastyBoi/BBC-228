@@ -1,19 +1,12 @@
 #pragma once
 #include <tchar.h>
 
-#define PARM_IN L"-in:"
-#define PARM_OUT L"-out:"
-#define PARM_LOG L"-log:"
-#define PARM_MAX_SIZE 300
-#define PARM_OUT_DEFAULT_EXT L".out"
-#define PARM_LOG_DEFAULT_EXT L".log"
-
-namespace Parm
+namespace TTM
 {
-	class Parameters
+	class CommandLineArgumentsParser
 	{
 	public:
-		Parameters(int argc, char** argv);
+		CommandLineArgumentsParser(int argc, char** argv);
 
 		const char* inFilePath() const { return m_inFilePath.c_str(); }
 		const char* outFilePath() const { return m_outFilePath.c_str(); }
