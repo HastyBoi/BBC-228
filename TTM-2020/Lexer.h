@@ -6,5 +6,5 @@
 
 namespace LA {
 	char Tokenize(const char* string);
-	void Scan(LT::LexTable& lextable, IT::IdTable& idtable, In::IN& in, const char* outFilePath, Log::Logger& log);
+	//void Scan(LT::LexTable& lextable, IT::IdTable& idtable, TTM::IN& in, const char* outFilePath, Log::Logger& log);
 }

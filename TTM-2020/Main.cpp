@@ -15,6 +15,12 @@
 
 static int allocCount = 0;
 
+void* operator new(size_t sz)
+{
+	allocCount++;
+	return malloc(sz);
+}
+
 int main(int argc, char** argv)
 {
 	std::setlocale(LC_ALL, "rus");
@@ -30,26 +36,22 @@ int main(int argc, char** argv)
 
 		auto parametersList = commandLineArguments.getAllParameters();
 		log << "---- Параметры --------\n";
-		for (const auto& p : parametersList) {
+		for (std::string_view p : parametersList) {
 			log << p << '\n';
 		}
 
-		/*In::InputFileReader in = In::InputFileReader();
-		in.read(commandLineArguments.inFilePath(), commandLineArguments.outFilePath());
+		TTM::InputFileReader in;
+		in.read(commandLineArguments.inFilePath());
 
-		log << "---- Исходные данные ------" << '\n' <<
-			"Количество символов: " << in.fileSize() << '\n' <<
-			"Проигнорировано: " << in.ignoredCharsCount() << '\n' <<
-			"Количество строк: " << in.linesCount() << '\n';
+		auto hihi = TTM::InputFileReader::splitStringByDelimiter(in.fileText(), TTM::IN_CODE_DELIM);
 
-		LT::LexTable lextable = LT::Create(in.fileSize());
-		IT::IdTable idtable = IT::Create(in.fileSize());*/
+		for (auto s : hihi) {
+			std::cout << s << '\n';
+		}
 
-		In::IN in = In::getin(commandLineArguments.inFilePath(), commandLineArguments.outFilePath());
-		LT::LexTable lextable = LT::Create(in.size);
-		IT::IdTable idtable = IT::Create(in.size);
-
-		LA::Scan(lextable, idtable, in, commandLineArguments.outFilePath(), log);
+		LT::LexTable lextable = LT::Create(1488);
+		IT::IdTable idtable = IT::Create(1488);
+		/*LA::Scan(lextable, idtable, in, commandLineArguments.outFilePath(), log);
 
 		MFST_TRACE_START
 			MFST::Mfst mfst(lextable, GRB::getGreibach());
@@ -59,7 +61,7 @@ int main(int argc, char** argv)
 		sema.Start(log);
 
 		CG::Generator CodeBuilder = CG::Generator(lextable, idtable, commandLineArguments.outFilePath());
-		CodeBuilder.Start(log);
+		CodeBuilder.Start(log);*/
 
 		LT::Delete(lextable);
 		IT::Delete(idtable);
@@ -68,6 +70,7 @@ int main(int argc, char** argv)
 	catch (Error::ERROR e)
 	{
 		std::cerr << e.message << '\n';
+		std::cerr << "строка " << e.inext.line << " позиция " << e.inext.col << '\n';
 	}
 
 #ifdef _DEBUG

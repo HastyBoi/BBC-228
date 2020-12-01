@@ -3,7 +3,7 @@
 
 constexpr auto timeBufferMaxSize = 228;
 
-//void WriteIn(Log::LOG log, In::IN in)
+//void WriteIn(Log::LOG log, TTM::IN in)
 //{
 //	*log.stream << "---- Исходные данные ------" << '\n' <<
 //		"Количество символов: " << in.size << '\n' <<

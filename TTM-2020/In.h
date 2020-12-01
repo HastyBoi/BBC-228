@@ -1,16 +1,17 @@
 #pragma once
 
-#define IN_MAX_LEN_TEXT 1024*1024
-#define IN_CODE_ENDL '\n'
-#define IN_CODE_DELIM '|'
+namespace TTM
+{
+	constexpr auto IN_CODE_ENDL = '\n';
+	constexpr auto IN_CODE_DELIM = '|';
 
 #define IN_CODE_TABLE \
-	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::S, IN::T, IN::F, IN::F, IN::I, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN_CODE_DELIM,IN_CODE_DELIM, IN::F, IN::F, IN::I, IN::F, IN::F, \
 	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
-	IN::S, IN::F, IN::F, IN::F, IN::F, IN::O, IN::F, IN::Q, IN::O, IN::O, IN::O, IN::O, IN::O, IN::O, IN::F, IN::O, \
-	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::F, IN::O, IN::F, IN::O, IN::F, IN::F, \
-	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
-	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN_CODE_DELIM, IN::F, IN::F, IN::F, IN::F, IN::O, IN::F, IN::Q, IN::O, IN::O, IN::O, IN::O, IN::O, IN::O, IN::F, IN::O, \
+	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::F, IN::O, IN::F, IN::O, IN::O, IN::F, \
+	IN::F, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
+	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::F, IN::F, IN::F, IN::F, IN::F, \
 	IN::F, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::O, IN::F, IN::O, IN::F, IN::F, \
 																													\
@@ -20,26 +21,8 @@
 	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
 	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
 	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
-	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
-	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
-
-namespace In
-{
-	struct IN
-	{
-		// T - допустимый символ, F - недопустимый, I - игнорировать, O - операция, Q - ', S - whitespace, иначе - заменить
-		enum { T = 1024, F = 2048, I = 4096, O = 8192, Q = 16384, S = 32768 };
-		int size;
-		int lines;
-		int ignor;
-		unsigned char* text;
-		int code[256];
-
-		IN();
-		IN(const IN& other);
-		~IN();
-	};
-	IN getin(const char* infile, const char* outfile);
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F \
 
 	class InputFileReader
 	{
@@ -51,11 +34,13 @@ namespace In
 		const std::string& fileText() const { return m_fileText; }
 
 		int m_codeTable[256];
-		// T - допустимый символ, F - недопустимый, I - игнорировать, O - операция, Q - ', S - whitespace, иначе - заменить
-		enum SymbolRules { T = 1024, F = 2048, I = 4096, O = 8192, Q = 16384, S = 32768 };
+		// T - допустимый символ, F - недопустимый, I - игнорировать, O - операция, Q - ', иначе - заменить
+		enum IN { T = 1024, F = 2048, I = 4096, O = 8192, Q = 16384 };
 
 		InputFileReader();
-		void read(const char* inFilePath, const char* outFilePath);
+		void read(const char* inFilePath);
+
+		static std::vector<std::string_view> splitStringByDelimiter(std::string_view s, char delimiter);
 	private:
 		size_t m_fileSize;
 		int m_linesCount;
