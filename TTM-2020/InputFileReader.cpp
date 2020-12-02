@@ -67,23 +67,23 @@ void TTM::InputFileReader::read(const char* inFilePath)
 	inputFile.close();
 }
 
-std::vector<std::string_view> TTM::InputFileReader::splitStringByDelimiter(std::string_view s, char delimiter)
+std::vector<std::string> TTM::InputFileReader::splitStringByDelimiter(std::string s, char delimiter)
 {
-	std::vector<std::string_view> output;
+	std::vector<std::string> output;
 	output.reserve(std::count_if(s.begin(), s.end(), [&](char c) { return c == delimiter; }) + 1);
 
 	size_t start = 0;
 	size_t end = s.find(delimiter);
 
-	while (end != std::string_view::npos)
+	while (end != std::string::npos)
 	{
 		output.push_back(s.substr(start, end - start));
 		start = end + 1;
 		end = s.find(delimiter, start);
 	}
 
-	std::string_view last_element = s.substr(start, end);
-	if (!last_element.empty() && last_element.find(delimiter) == std::string_view::npos)
+	std::string last_element = s.substr(start, end);
+	if (!last_element.empty() && last_element.find(delimiter) == std::string::npos)
 		output.push_back(s.substr(start, end));
 
 	return output;

@@ -24,7 +24,7 @@ namespace TTM
 		std::string m_outFilePath;
 		std::string m_logFilePath;
 
-		static bool optionExists(char** begin, char** end, std::string_view option);
-		static char* getOption(char** begin, char** end, std::string_view option);
+		static bool optionExists(char** begin, char** end, std::string option);
+		static char* getOption(char** begin, char** end, std::string option);
 	};
 }

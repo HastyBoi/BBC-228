@@ -19,3 +19,7 @@
 #include <sstream>
 #include <clocale>
 #include <map>
+#include <unordered_map>
+#include <list>
+#include <set>
+#include <unordered_set>

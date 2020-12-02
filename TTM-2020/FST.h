@@ -479,5 +479,5 @@ namespace FST
 		~FST();
 	};
 
-	bool execute(std::string_view string, FST& fst);
+	bool execute(std::string string, FST& fst);
 };

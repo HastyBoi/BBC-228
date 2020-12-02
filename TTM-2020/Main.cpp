@@ -12,24 +12,26 @@
 #include "PolishNotation.h"
 #include "SemanticAnalyzer.h"
 #include "CodeGeneration.h"
+#include "LexicalAnalyzer.h"
 
 static int allocCount = 0;
 
-void* operator new(size_t sz)
-{
-	allocCount++;
-	return malloc(sz);
-}
+//void* operator new(size_t sz)
+//{
+//	allocCount++;
+//	return malloc(sz);
+//}
 
 int main(int argc, char** argv)
 {
 	using namespace TTM;
+	std::srand((size_t)std::time(nullptr));
 	std::setlocale(LC_ALL, "rus");
 
 	try
 	{
-		CommandLineArgumentsParser commandLineArguments(argc, argv);
-		Logger log(commandLineArguments.logFilePath());
+		CommandLineArgumentsParser commandLineArguments{ argc, argv };
+		Logger log{ commandLineArguments.logFilePath() };
 
 		log.openFile();
 		log << "---- Протокол ------ Дата: ";
@@ -37,7 +39,7 @@ int main(int argc, char** argv)
 
 		auto parametersList = commandLineArguments.getAllParameters();
 		log << "---- Параметры --------\n";
-		for (std::string_view p : parametersList)
+		for (std::string p : parametersList)
 		{
 			log << p << '\n';
 		}
@@ -51,18 +53,20 @@ int main(int argc, char** argv)
 			"Количество строк: " << in.linesCount() << '\n';
 
 		auto splitted = InputFileReader::splitStringByDelimiter(in.fileText(), in::delimiter);
-
-		LexTable lextable(splitted.size());
+		LexTable lextable{ splitted.size() };
 		IdTable idtable{};
-
-		Scan(lextable, idtable, in, log);
+		LexicalAnalyzer lexer{ lextable,idtable };
+		lexer.Scan(splitted, log);
 
 		log.closeFile();
 	}
 	catch (Error::ERROR e)
 	{
 		std::cerr << e.message << '\n';
-		std::cerr << "строка " << e.inext.line << " позиция " << e.inext.col << '\n';
+		if (e.inext.line > 0 && e.inext.col > 0)
+		{
+			std::cerr << "строка " << e.inext.line << " позиция " << e.inext.col << '\n';
+		}
 	}
 
 #ifdef _DEBUG

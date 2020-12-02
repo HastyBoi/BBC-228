@@ -17,7 +17,7 @@
 namespace Error {
 	struct ERROR {
 		int id = 0;
-		std::string_view message;
+		std::string message;
 		struct in {
 			short line;
 			short col;

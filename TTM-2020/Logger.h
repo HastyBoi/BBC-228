@@ -8,10 +8,10 @@ namespace TTM
 	class Logger
 	{
 	public:
-		Logger(std::string_view logFilePath = "log.txt");
+		Logger(std::string logFilePath = "log.txt");
 		~Logger();
 
-		void setLogFilePath(std::string_view logFilePath);
+		void setLogFilePath(std::string logFilePath);
 		bool openFile();
 		bool reopenFile();
 		void closeFile();

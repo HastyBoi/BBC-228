@@ -20,11 +20,11 @@ namespace TTM
 	public:
 		struct Entry
 		{
-			int idxFirstLE;
+			std::string name;
 			std::string scope;
-			std::string id;
+			int lexTableIndex;
 			it::data_type dataType;
-			it::id_type type;
+			it::id_type idType;
 			union
 			{
 				int intValue;
@@ -34,10 +34,27 @@ namespace TTM
 					char string[TI_STR_MAXSIZE - 1];
 				} strValue;
 			} value;
+
+			void setValue(int new_value);
+			void setValue(const char* new_value);
+
+			Entry() = default;
+			Entry(std::string name, std::string scope, int lexTableIndex, it::id_type idType, int value);
+			Entry(std::string name, std::string scope, int lexTableIndex, it::id_type idType, const char* value);
+			Entry(std::string name, std::string scope, int lexTableIndex, it::data_type dataType, it::id_type idType, const char* value);
 		};
 
+		int getIdIndexByName(std::string scope, std::string name, it::id_type idType);
+		int getLiteralIndexByValue(int value);
+		int getLiteralIndexByValue(const char* value);
+
+		int addEntry(const Entry& entry);
+
+		int size() const { return m_table.size(); }
+
+		std::string dumpTable(size_t startIndex, size_t endIndex) const;
+
 	private:
-		std::map<std::string, Entry> table;
-		size_t size;
+		std::vector<Entry> m_table;
 	};
 }

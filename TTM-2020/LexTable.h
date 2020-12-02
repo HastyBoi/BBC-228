@@ -1,13 +1,14 @@
 #pragma once
+#include "IdTable.h"
 #define LT_MAXSIZE						4096
-#define LT_TI_NULLIDX					((int)0xffffffff)
+
+#pragma region LEXEMES
 #define LEX_I32							'n'
 #define LEX_STR							's'
-#define LEX_DATATYPE					't'
 #define LEX_ID							'i'
+#define LEX_FUNCTION_CALL				'@'
 #define LEX_INTEGER_LITERAL				'1'
 #define LEX_STRING_LITERAL				'2'
-#define LEX_LITERAL						'l'
 #define LEX_FN							'f'
 #define LEX_PARSE_INT					'P'
 #define LEX_CONCAT						'C'
@@ -35,6 +36,7 @@
 #define LEX_GREATER						'>'
 #define LEX_LESS_OR_EQUALS				'o'
 #define LEX_GREATER_OR_EQUALS			'x'
+#pragma endregion
 
 namespace TTM {
 	class LexTable
@@ -42,18 +44,49 @@ namespace TTM {
 	public:
 		struct Entry
 		{
+			char lexeme;
 			int lineNumber;
-			int idxTI;
-			std::string lexeme;
+			int idTableIndex;
+
+			Entry(char lexeme, int lineNumber, int idTableIndex = TI_NULLIDX);
 		};
 
 		LexTable(size_t capacity = 0);
-		void AddEntry(const Entry& entry);
+		void addEntry(const LexTable::Entry& entry);
+		std::string dumpTable(size_t startIndex, size_t endIndex) const;
 
-		Entry& operator [](size_t index);
+		bool declaredFunction() const
+		{
+			return m_table.size() >= 2 && m_table[m_table.size() - 2].lexeme == LEX_FN;
+		}
+
+		bool declaredVariable() const
+		{
+			return m_table.size() >= 2 && m_table[m_table.size() - 2].lexeme == LEX_LET;
+		}
+
+		bool declaredDatatype() const
+		{
+			return m_table.size() >= 1
+				&& (m_table[m_table.size() - 1].lexeme == LEX_I32
+					|| m_table[m_table.size() - 1].lexeme == LEX_STR);
+		}
+
+		it::data_type getDatatypeFromDeclaration() const
+		{
+			if (m_table.size() >= 1 && m_table[m_table.size() - 1].lexeme == LEX_I32)
+			{
+				return it::data_type::i32;
+			}
+			else
+			{
+				return it::data_type::str;
+			}
+		}
+
+		int size() const { return m_table.size(); }
 
 	private:
 		std::vector<Entry> m_table;
-		size_t m_size;
 	};
 }

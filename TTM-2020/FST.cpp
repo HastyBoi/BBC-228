@@ -48,7 +48,7 @@ FST::FST::~FST()
 	rstates = nullptr;
 }
 
-bool step(std::string_view str, FST::FST& fst, short*& rstates)
+bool step(std::string str, FST::FST& fst, short*& rstates)
 {
 	bool output = false;
 
@@ -65,7 +65,7 @@ bool step(std::string_view str, FST::FST& fst, short*& rstates)
 	return output;
 }
 
-bool FST::execute(std::string_view str, FST& fst)
+bool FST::execute(std::string str, FST& fst)
 {
 	short* rstates = DBG_NEW short[fst.nstates];
 	short lstring = (short)str.size();

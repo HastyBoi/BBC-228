@@ -3,7 +3,7 @@
 
 constexpr auto timeBufferMaxSize = 228;
 
-TTM::Logger::Logger(std::string_view logFilePath)
+TTM::Logger::Logger(std::string logFilePath)
 {
 	setLogFilePath(logFilePath);
 }
@@ -13,7 +13,7 @@ TTM::Logger::~Logger()
 	closeFile();
 }
 
-void TTM::Logger::setLogFilePath(std::string_view logFilePath)
+void TTM::Logger::setLogFilePath(std::string logFilePath)
 {
 	if (logFilePath.empty())
 		throw ERROR_THROW(112);

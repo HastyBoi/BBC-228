@@ -28,12 +28,12 @@ std::vector<std::string> TTM::CommandLineArgumentsParser::getAllParameters() con
 	return parameters;
 }
 
-bool TTM::CommandLineArgumentsParser::optionExists(char** begin, char** end, std::string_view option)
+bool TTM::CommandLineArgumentsParser::optionExists(char** begin, char** end, std::string option)
 {
 	return std::find(begin, end, option) != end;
 }
 
-char* TTM::CommandLineArgumentsParser::getOption(char** begin, char** end, std::string_view option)
+char* TTM::CommandLineArgumentsParser::getOption(char** begin, char** end, std::string option)
 {
 	char** itr = std::find(begin, end, option);
 

@@ -1,12 +1,20 @@
 #pragma once
-#include "IdTable.h"
-#include "LexTable.h"
-#include "CommandLineArgumentsParser.h"
 #include "Logger.h"
+#include "LexTable.h"
+#include "IdTable.h"
 
 namespace TTM
 {
-	char Tokenize(std::string_view str);
+	class LexicalAnalyzer
+	{
+	public:
+		LexicalAnalyzer(const LexTable& lextable, const IdTable& idtable);
 
-	void Scan(LexTable& lextable, IdTable& idtable, const InputFileReader& in, Logger& log);
+		void Scan(const std::vector<std::string>& sourceCode, Logger& log);
+	private:
+		LexTable lextable;
+		IdTable idtable;
+
+		char Tokenize(const std::string& str);
+	};
 }
