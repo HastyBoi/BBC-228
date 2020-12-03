@@ -17,7 +17,7 @@ TTM::LexTable::Entry::Entry(char lexeme, int lineNumber, int idTableIndex)
 	: lexeme(lexeme), lineNumber(lineNumber), idTableIndex(idTableIndex)
 {	}
 
-std::string TTM::LexTable::dumpTable(size_t startIndex, size_t endIndex) const
+const std::string TTM::LexTable::dumpTable(size_t startIndex, size_t endIndex) const
 {
 	std::stringstream output;
 

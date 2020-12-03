@@ -83,7 +83,7 @@ int TTM::IdTable::getLiteralIndexByValue(const char* value) {
 	return TI_NULLIDX;
 }
 
-std::string TTM::IdTable::dumpTable(size_t startIndex, size_t endIndex) const
+const std::string TTM::IdTable::dumpTable(size_t startIndex, size_t endIndex) const
 {
 	std::stringstream output;
 

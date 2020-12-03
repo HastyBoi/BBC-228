@@ -3,9 +3,21 @@
 #include "IdTable.h"
 #include "Logger.h"
 
-namespace SA
+namespace TTM
 {
-	struct SemanticAnalyzer
+	class SemanticAnalyzer
 	{
+	public:
+		SemanticAnalyzer(LexTable& lextable, IdTable& idtable);
+		void Start(Logger& log);
+	private:
+		LexTable& lextable;
+		IdTable& idtable;
+
+		void checkTypeMismatch();
+		void checkUndeclaredVariable();
+		void checkMultipleDeclaration();
+		void checkAccessingOutOfScopeId();
+		void checkArgumentsMismatch();
 	};
 }

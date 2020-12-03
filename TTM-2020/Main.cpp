@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "MFST.h"
+#include "SyntaxAnalyzer.h"
 #include "Error.h"
 #include "FST.h"
 #include "Greibach.h"
@@ -49,17 +49,20 @@ int main(int argc, char** argv)
 		log << "---- Исходные данные ------" << '\n' <<
 			"Количество символов: " << in.fileSize() << '\n' <<
 			"Проигнорировано: " << in.ignoredCharsCount() << '\n' <<
-			"Количество строк: " << in.linesCount() << '\n';
+			"Количество строк: " << in.linesCount() << '\n'
+			<< "-----------------------------------------------------------\n";
 
 		auto splitted = InputFileReader::splitStringByDelimiter(in.fileText(), in::delimiter);
 		LexTable lextable{ splitted.size() };
 		IdTable idtable{};
-		LexicalAnalyzer lexer{ lextable, idtable };
-		lexer.Scan(splitted, log);
+		LexicalAnalyzer lexicalAnalyzer{ lextable, idtable };
+		lexicalAnalyzer.Scan(splitted, log);
 
-		MFST_TRACE_START(log);
-		Mfst mfst{ lextable, GRB::getGreibach() };
-		mfst.start(log);
+		SyntaxAnalyzer syntaxAnalyzer{ lextable, GRB::getGreibach() };
+		syntaxAnalyzer.Start(log);
+
+		SemanticAnalyzer semanticAnalyzer{ lextable, idtable };
+		semanticAnalyzer.Start(log);
 
 		if (commandLineArguments.lexTableFilePath())
 		{
@@ -72,6 +75,13 @@ int main(int argc, char** argv)
 			std::ofstream idTableFile(commandLineArguments.idTableFilePath());
 			idTableFile << idtable.dumpTable();
 			idTableFile.close();
+		}
+
+		if (commandLineArguments.traceFilePath())
+		{
+			std::ofstream traceFile(commandLineArguments.traceFilePath());
+			traceFile << syntaxAnalyzer.dumpTrace();
+			traceFile.close();
 		}
 
 		log.closeFile();
@@ -96,4 +106,4 @@ int main(int argc, char** argv)
 	system("pause");
 #endif // _DEBUG
 	return 0;
-}
+	}

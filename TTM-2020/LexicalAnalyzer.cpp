@@ -148,4 +148,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 
 		lextable.addEntry(LexTable::Entry(token, sourceCode[i].second, idTableIndex));
 	}
+
+	log << "Лексический анализ выполнен без ошибок\n";
 }

@@ -33,9 +33,6 @@
     <ClCompile Include="Greibach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MFST.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SemanticAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,6 +57,9 @@
     <ClCompile Include="IdTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SyntaxAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Error.h">
@@ -75,9 +75,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Greibach.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MFST.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SemanticAnalyzer.h">
@@ -102,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IdTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SyntaxAnalyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

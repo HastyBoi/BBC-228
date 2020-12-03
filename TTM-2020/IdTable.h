@@ -52,7 +52,12 @@ namespace TTM
 
 		int size() const { return m_table.size(); }
 
-		std::string dumpTable(size_t startIndex = 0, size_t endIndex = 0) const;
+		const std::string dumpTable(size_t startIndex = 0, size_t endIndex = 0) const;
+
+		const Entry& operator[](size_t index) const
+		{
+			return m_table[index];
+		}
 
 	private:
 		std::vector<Entry> m_table;
