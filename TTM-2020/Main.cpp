@@ -57,8 +57,8 @@ int main(int argc, char** argv)
 		LexicalAnalyzer lexer{ lextable, idtable };
 		lexer.Scan(splitted, log);
 
-		MFST_TRACE_START(log)
-			MFST::Mfst mfst{ lextable, GRB::getGreibach() };
+		MFST_TRACE_START(log);
+		Mfst mfst{ lextable, GRB::getGreibach() };
 		mfst.start(log);
 
 		if (commandLineArguments.lexTableFilePath())
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
 			std::cerr << "позиция " << e.inext.col << ' ';
 		}
 		std::cerr << '\n';
-		}
+	}
 
 #ifdef _DEBUG
 	int hasMemoryLeaks = _CrtDumpMemoryLeaks();
@@ -96,4 +96,4 @@ int main(int argc, char** argv)
 	system("pause");
 #endif // _DEBUG
 	return 0;
-	}
+}

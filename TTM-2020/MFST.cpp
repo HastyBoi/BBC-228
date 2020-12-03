@@ -3,31 +3,31 @@
 
 int FST_TRACE_n = -1;
 
-MFST::MfstState::MfstState()
+TTM::MfstState::MfstState()
 	: tape_position(0), nrule(-1), nrulechain(-1)
 {	}
 
-MFST::MfstState::MfstState(short position, MFSTSTACK st, short nrulechain)
+TTM::MfstState::MfstState(short position, MFSTSTACK st, short nrulechain)
 	: tape_position(position), nrule(-1), nrulechain(nrulechain), st(st)
 {	}
 
-MFST::MfstState::MfstState(short position, MFSTSTACK st, short nrule, short nrulechain)
+TTM::MfstState::MfstState(short position, MFSTSTACK st, short nrule, short nrulechain)
 	: tape_position(position), nrule(nrule), nrulechain(nrulechain), st(st)
 {	}
 
-MFST::Mfst::MfstDiagnosis::MfstDiagnosis()
+TTM::Mfst::MfstDiagnosis::MfstDiagnosis()
 	: tape_position(-1), rc_step(RC_STEP::SURPRISE), nrule(-1), nrule_chain(-1)
 {	}
 
-MFST::Mfst::MfstDiagnosis::MfstDiagnosis(short tape_position, RC_STEP rc_step, short nrule, short nrule_chain)
+TTM::Mfst::MfstDiagnosis::MfstDiagnosis(short tape_position, RC_STEP rc_step, short nrule, short nrule_chain)
 	: tape_position(tape_position), rc_step(rc_step), nrule(nrule), nrule_chain(nrule_chain)
 {	}
 
-MFST::Mfst::Mfst()
+TTM::Mfst::Mfst()
 	: tape(nullptr), tape_position(0), nrule(-1), nrulechain(-1), tape_size(0), lextable({}), greibach({})
 {	}
 
-MFST::Mfst::Mfst(const TTM::LexTable& lextable, const GRB::Greibach& greibach)
+TTM::Mfst::Mfst(const TTM::LexTable& lextable, const GRB::Greibach& greibach)
 	: tape_position(0), nrule(-1), nrulechain(-1), tape_size(lextable.size()), lextable(lextable), greibach(greibach)
 {
 	tape = DBG_NEW short[tape_size];
@@ -40,7 +40,7 @@ MFST::Mfst::Mfst(const TTM::LexTable& lextable, const GRB::Greibach& greibach)
 	st.push(greibach.startN);
 }
 
-std::string MFST::Mfst::getCSt() {
+std::string TTM::Mfst::getCSt() {
 	std::string output = "";
 
 	for (int k = (signed)st.size() - 1; k >= 0; --k) {
@@ -51,7 +51,7 @@ std::string MFST::Mfst::getCSt() {
 	return output;
 }
 
-std::string MFST::Mfst::getCTape(short pos, short n) {
+std::string TTM::Mfst::getCTape(short pos, short n) {
 	std::string output = "";
 	short i;
 	short k = (pos + n < tape_size) ? pos + n : tape_size;
@@ -63,7 +63,7 @@ std::string MFST::Mfst::getCTape(short pos, short n) {
 	return output;
 }
 
-std::string MFST::Mfst::getDiagnosis(short n) {
+std::string TTM::Mfst::getDiagnosis(short n) {
 	std::string output = "";
 	std::stringstream ss;
 	int errid = 0;
@@ -79,13 +79,13 @@ std::string MFST::Mfst::getDiagnosis(short n) {
 	return output;
 }
 
-bool MFST::Mfst::save_state(TTM::Logger& log) {
+bool TTM::Mfst::save_state(TTM::Logger& log) {
 	storestate.push(MfstState(tape_position, st, nrule, nrulechain));
 	MFST_TRACE6(log, "SAVESTATE:", storestate.size());
 	return true;
 }
 
-bool MFST::Mfst::restore_state(TTM::Logger& log) {
+bool TTM::Mfst::restore_state(TTM::Logger& log) {
 	bool output = false;
 	MfstState state;
 
@@ -103,7 +103,7 @@ bool MFST::Mfst::restore_state(TTM::Logger& log) {
 	return output;
 }
 
-bool MFST::Mfst::push_chain(GRB::Rule::Chain chain) {
+bool TTM::Mfst::push_chain(GRB::Rule::Chain chain) {
 	for (int k = chain.size - 1; k >= 0; k--) {
 		st.push(chain.nt[k]);
 	}
@@ -111,7 +111,7 @@ bool MFST::Mfst::push_chain(GRB::Rule::Chain chain) {
 	return true;
 }
 
-MFST::Mfst::RC_STEP MFST::Mfst::step(TTM::Logger& log) {
+TTM::Mfst::RC_STEP TTM::Mfst::step(TTM::Logger& log) {
 	RC_STEP output = Mfst::RC_STEP::SURPRISE;
 	if (tape_position < tape_size) {
 		if (GRB::Rule::Chain::isN(st.top())) {
@@ -154,7 +154,7 @@ MFST::Mfst::RC_STEP MFST::Mfst::step(TTM::Logger& log) {
 	return output;
 }
 
-bool MFST::Mfst::start(TTM::Logger& log) {
+bool TTM::Mfst::start(TTM::Logger& log) {
 	bool output = false;
 	RC_STEP rc_step = RC_STEP::SURPRISE;
 
@@ -193,7 +193,7 @@ bool MFST::Mfst::start(TTM::Logger& log) {
 	return output;
 }
 
-bool MFST::Mfst::savediagnosis(RC_STEP rc_step) {
+bool TTM::Mfst::savediagnosis(RC_STEP rc_step) {
 	bool output = false;
 	short k = 0;
 
@@ -210,7 +210,7 @@ bool MFST::Mfst::savediagnosis(RC_STEP rc_step) {
 	return output;
 }
 
-void MFST::Mfst::printrules(TTM::Logger& log) {
+void TTM::Mfst::printrules(TTM::Logger& log) {
 	MfstState state;
 	GRB::Rule rule;
 	for (unsigned short k = 0; k < storestate.size(); k++)
@@ -220,22 +220,3 @@ void MFST::Mfst::printrules(TTM::Logger& log) {
 		MFST_TRACE7(log)
 	}
 }
-
-bool MFST::Mfst::save_dedication() {
-	MfstState state;
-	GRB::Rule rule;
-	dedication.size = (short)storestate.size();
-	dedication.nrules = DBG_NEW short[dedication.size];
-	dedication.nrulechains = DBG_NEW short[dedication.size];
-	for (unsigned short k = 0; k < storestate.size(); k++)
-	{
-		state = storestate.c[k];
-		dedication.nrules[k] = state.nrule;
-		dedication.nrulechains[k] = state.nrulechain;
-	};
-	return true;
-}
-
-MFST::Mfst::Dedication::Dedication()
-	: size(0), nrules(nullptr), nrulechains(nullptr)
-{	}

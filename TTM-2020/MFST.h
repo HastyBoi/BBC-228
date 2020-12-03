@@ -8,7 +8,7 @@
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 
-//#define TRACE
+#define TRACE
 
 #ifdef TRACE
 
@@ -67,8 +67,10 @@ struct use_container : T
 
 typedef use_container<std::stack<short>> MFSTSTACK;
 
-namespace MFST {
-	struct MfstState {
+namespace TTM
+{
+	struct MfstState
+	{
 		short tape_position;
 		short nrule;
 		short nrulechain;
@@ -79,8 +81,10 @@ namespace MFST {
 		MfstState(short position, MFSTSTACK st, short nrule, short nrulechain);
 	};
 
-	struct Mfst {
-		enum class RC_STEP {
+	struct Mfst
+	{
+		enum class RC_STEP
+		{
 			NS_OK,
 			NS_NORULE,
 			NS_NORULECHAIN,
@@ -91,7 +95,8 @@ namespace MFST {
 			SURPRISE
 		};
 
-		struct MfstDiagnosis {
+		struct MfstDiagnosis
+		{
 			short tape_position;
 			RC_STEP rc_step;
 			short nrule;
@@ -124,13 +129,5 @@ namespace MFST {
 		bool start(TTM::Logger& log);
 		bool savediagnosis(RC_STEP rc_step);
 		void printrules(TTM::Logger& log);
-		struct Dedication {
-			short size;
-			short* nrules;
-			short* nrulechains;
-
-			Dedication();
-		} dedication;
-		bool save_dedication();
 	};
 }
