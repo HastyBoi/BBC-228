@@ -44,3 +44,14 @@ const std::string TTM::LexTable::dumpTable(size_t startIndex, size_t endIndex) c
 
 	return output.str();
 }
+
+bool TTM::LexTable::hasLexeme(char lexeme) const
+{
+	for (const auto& e : m_table)
+	{
+		if (e.lexeme == lexeme)
+			return true;
+	}
+
+	return false;
+}

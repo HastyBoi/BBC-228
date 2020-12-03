@@ -44,7 +44,7 @@ namespace TTM
 			Entry(std::string name, std::string scope, int lexTableIndex, it::data_type dataType, it::id_type idType, const char* value);
 		};
 
-		int getIdIndexByName(std::string scope, std::string name, it::id_type idType);
+		int getIdIndexByName(std::string scope, std::string name);
 		int getLiteralIndexByValue(int value);
 		int getLiteralIndexByValue(const char* value);
 

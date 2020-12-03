@@ -14,7 +14,7 @@
 #include "CodeGeneration.h"
 #include "LexicalAnalyzer.h"
 
-static int allocCount = 0;
+//static int allocCount = 0;
 
 //void* operator new(size_t sz)
 //{
@@ -55,7 +55,6 @@ int main(int argc, char** argv)
 		IdTable idtable{};
 		LexicalAnalyzer lexicalAnalyzer{ lextable, idtable };
 		lexicalAnalyzer.Scan(splitted, log);
-
 		SyntaxAnalyzer syntaxAnalyzer{ lextable, GRB::getGreibach() };
 		syntaxAnalyzer.Start(log);
 

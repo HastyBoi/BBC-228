@@ -39,6 +39,7 @@ void TTM::InputFileReader::read(const char* inFilePath)
 					readChar = inputFile.get();
 					++m_ignoredCharsCount;
 				} while (readChar != in::endl);
+				m_fileText.push_back(in::endl);
 			}
 		}
 

@@ -42,15 +42,21 @@ void TTM::IdTable::Entry::setValue(const char* new_value)
 
 int TTM::IdTable::addEntry(const Entry& entry)
 {
+	if (entry.idType == it::id_type::unknown)
+		//todo add new error type (to pass name)
+		throw ERROR_THROW(120);
+	if (entry.dataType == it::data_type::undefined)
+		throw ERROR_THROW(121);
+
 	m_table.push_back(entry);
 	return m_table.size() - 1;
 }
 
-int TTM::IdTable::getIdIndexByName(std::string scope, std::string name, it::id_type idType)
+int TTM::IdTable::getIdIndexByName(std::string scope, std::string name)
 {
 	for (size_t i = 0; i < m_table.size(); ++i)
 	{
-		if (m_table[i].scope == scope && m_table[i].name == name && m_table[i].idType == idType)
+		if (m_table[i].scope == scope && m_table[i].name == name)
 		{
 			return i;
 		}

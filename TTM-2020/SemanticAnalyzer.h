@@ -15,8 +15,6 @@ namespace TTM
 		IdTable& idtable;
 
 		void checkTypeMismatch();
-		void checkUndeclaredVariable();
-		void checkMultipleDeclaration();
 		void checkAccessingOutOfScopeId();
 		void checkArgumentsMismatch();
 	};

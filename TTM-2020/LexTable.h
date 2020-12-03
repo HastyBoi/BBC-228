@@ -1,6 +1,5 @@
 #pragma once
 #include "IdTable.h"
-#define LT_MAXSIZE						4096
 
 #pragma region LEXEMES
 #define LEX_I32							'n'
@@ -40,7 +39,8 @@
 #define LEX_GREATER_OR_EQUALS			'x'
 #pragma endregion
 
-namespace TTM {
+namespace TTM
+{
 	class LexTable
 	{
 	public:
@@ -69,12 +69,12 @@ namespace TTM {
 
 		bool declaredDatatype() const
 		{
-			return m_table.size() >= 1
-				&& (m_table[m_table.size() - 1].lexeme == LEX_I32
-					|| m_table[m_table.size() - 1].lexeme == LEX_STR);
+			return m_table.size() >= 1 && (m_table[m_table.size() - 1].lexeme == LEX_DATATYPE);
 		}
 
 		int size() const { return m_table.size(); }
+
+		bool hasLexeme(char lexeme) const;
 
 		const Entry& operator[](size_t index) const
 		{

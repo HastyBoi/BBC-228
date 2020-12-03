@@ -9,8 +9,6 @@ TTM::SemanticAnalyzer::SemanticAnalyzer(LexTable& lextable, IdTable& idtable)
 void TTM::SemanticAnalyzer::Start(Logger& log)
 {
 	checkTypeMismatch();
-	checkUndeclaredVariable();
-	checkMultipleDeclaration();
 	checkAccessingOutOfScopeId();
 	checkArgumentsMismatch();
 }
@@ -25,14 +23,6 @@ void TTM::SemanticAnalyzer::checkTypeMismatch()
 				throw ERROR_THROW_IN(706, lextable[i].lineNumber, -1);
 		}
 	}
-}
-
-void TTM::SemanticAnalyzer::checkUndeclaredVariable()
-{
-}
-
-void TTM::SemanticAnalyzer::checkMultipleDeclaration()
-{
 }
 
 void TTM::SemanticAnalyzer::checkAccessingOutOfScopeId()
