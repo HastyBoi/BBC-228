@@ -3,46 +3,47 @@
 #include "Greibach.h"
 #include "LexTable.h"
 #include "Error.h"
+#include "Logger.h"
 
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 
-//#define TRACE
+#define TRACE
 
 #ifdef TRACE
 
-#define MFST_TRACE_START std::cout << std::setw(4)<<std::left<<"Шаг"<<": " \
+#define MFST_TRACE_START(log) log << std::setw(4)<<std::left<<"Шаг"<<": " \
 	<< std::setw(30) << std::left << "Правило"  \
 	<< std::setw(30) << std::left << "Входная лента" \
 	<< std::setw(20) << std::left << "Стек" \
-	<< std::endl;
+	<< '\n';
 
-#define MFST_TRACE1 std::cout <<std::setw(4)<<std::left<<++FST_TRACE_n<<": " \
+#define MFST_TRACE1(log) log <<std::setw(4)<<std::left<<++FST_TRACE_n<<": " \
 	<< std::setw(30) << std::left << rule.getCRule(nrulechain)  \
 	<< std::setw(30) << std::left << getCTape(tape_position) \
 	<< std::setw(20) << std::left << getCSt() \
-	<< std::endl;
+	<< '\n';
 
-#define MFST_TRACE2    std::cout <<std::setw(4)<<std::left<<FST_TRACE_n<<": " \
+#define MFST_TRACE2(log)    log <<std::setw(4)<<std::left<<FST_TRACE_n<<": " \
 	<< std::setw(30) << std::left << " "  \
 	<< std::setw(30) << std::left << getCTape(tape_position) \
 	<< std::setw(20) << std::left << getCSt() \
-	<< std::endl;
+	<< '\n';
 
-#define MFST_TRACE3     std::cout<<std::setw(4)<<std::left<<++FST_TRACE_n<<": " \
+#define MFST_TRACE3(log)     log<<std::setw(4)<<std::left<<++FST_TRACE_n<<": " \
 	<< std::setw(30) << std::left << " "  \
 	<< std::setw(30) << std::left << getCTape(tape_position) \
 	<< std::setw(20) << std::left << getCSt() \
-	<< std::endl;
+	<< '\n';
 
-#define MFST_TRACE4(c) std::cout<<std::setw(4)<<std::left<<++FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<std::endl;
-#define MFST_TRACE5(c) std::cout<<std::setw(4)<<std::left<<  FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<std::endl;
+#define MFST_TRACE4(log,c) log<<std::setw(4)<<std::left<<++FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<'\n';
+#define MFST_TRACE5(log,c) log<<std::setw(4)<<std::left<<  FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<'\n';
 
-#define MFST_TRACE6(c,k) std::cout<<std::setw(4)<<std::left<<++FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<k<<std::endl;
+#define MFST_TRACE6(log,c,k) log<<std::setw(4)<<std::left<<++FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<k<<'\n';
 
-#define MFST_TRACE7  std::cout<<std::setw(4)<<std::left<<state.tape_position<<": "\
+#define MFST_TRACE7(log)  log<<std::setw(4)<<std::left<<state.tape_position<<": "\
 	<< std::setw(20) << std::left << rule.getCRule(state.nrulechain) \
-	<< std::endl;
+	<< '\n';
 
 #else
 
@@ -106,23 +107,23 @@ namespace MFST {
 		short nrulechain;
 		short tape_size;
 		GRB::Greibach greibach;
-		TTM::LexTable lex;
+		const TTM::LexTable& lextable;
 		MFSTSTACK st;
 		use_container<std::stack<MfstState>> storestate;
 
 		Mfst();
-		Mfst(TTM::LexTable lextable, GRB::Greibach greibach);
+		Mfst(const TTM::LexTable& lextable, const GRB::Greibach& greibach);
 
 		std::string getCSt();
 		std::string getCTape(short pos, short n = 25);
 		std::string getDiagnosis(short n);
-		bool save_state();
-		bool restore_state();
+		bool save_state(TTM::Logger& log);
+		bool restore_state(TTM::Logger& log);
 		bool push_chain(GRB::Rule::Chain chain);
-		RC_STEP step();
-		bool start(std::ostream& outputStream);
+		RC_STEP step(TTM::Logger& log);
+		bool start(TTM::Logger& log);
 		bool savediagnosis(RC_STEP rc_step);
-		void printrules();
+		void printrules(TTM::Logger& log);
 		struct Dedication {
 			short size;
 			short* nrules;

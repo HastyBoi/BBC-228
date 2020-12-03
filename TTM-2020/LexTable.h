@@ -6,9 +6,11 @@
 #define LEX_I32							'n'
 #define LEX_STR							's'
 #define LEX_ID							'i'
+#define LEX_DATATYPE					't'
 #define LEX_FUNCTION_CALL				'@'
 #define LEX_INTEGER_LITERAL				'1'
 #define LEX_STRING_LITERAL				'2'
+#define LEX_LITERAL						'l'
 #define LEX_FN							'f'
 #define LEX_PARSE_INT					'P'
 #define LEX_CONCAT						'C'
@@ -85,6 +87,11 @@ namespace TTM {
 		}
 
 		int size() const { return m_table.size(); }
+
+		const Entry& operator[](size_t index) const
+		{
+			return m_table[index];
+		}
 
 	private:
 		std::vector<Entry> m_table;

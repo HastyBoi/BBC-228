@@ -43,7 +43,7 @@ namespace TTM
 		InputFileReader();
 		void read(const char* inFilePath);
 
-		static std::vector<std::string> splitStringByDelimiter(std::string s, char delimiter);
+		static std::vector<std::pair<std::string, int>> splitStringByDelimiter(std::string s, char delimiter);
 	private:
 		size_t m_fileSize;
 		int m_linesCount;

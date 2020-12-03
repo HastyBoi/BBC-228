@@ -25,7 +25,6 @@ static int allocCount = 0;
 int main(int argc, char** argv)
 {
 	using namespace TTM;
-	std::srand((size_t)std::time(nullptr));
 	std::setlocale(LC_ALL, "rus");
 
 	try
@@ -55,8 +54,12 @@ int main(int argc, char** argv)
 		auto splitted = InputFileReader::splitStringByDelimiter(in.fileText(), in::delimiter);
 		LexTable lextable{ splitted.size() };
 		IdTable idtable{};
-		LexicalAnalyzer lexer{ lextable,idtable };
+		LexicalAnalyzer lexer{ lextable, idtable };
 		lexer.Scan(splitted, log);
+
+		MFST_TRACE_START(log)
+			MFST::Mfst mfst{ lextable, GRB::getGreibach() };
+		mfst.start(log);
 
 		log.closeFile();
 	}

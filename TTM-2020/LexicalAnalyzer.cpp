@@ -2,7 +2,7 @@
 #include "LexicalAnalyzer.h"
 #include "FST.h"
 
-TTM::LexicalAnalyzer::LexicalAnalyzer(const LexTable& lextable, const IdTable& idtable)
+TTM::LexicalAnalyzer::LexicalAnalyzer(LexTable& lextable, IdTable& idtable)
 	: lextable(lextable), idtable(idtable)
 {	}
 
@@ -37,7 +37,7 @@ char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 	return EOF;
 }
 
-void TTM::LexicalAnalyzer::Scan(const std::vector<std::string>& sourceCode, Logger& log)
+void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& sourceCode, Logger& log)
 {
 	using type = it::data_type;
 	using id_t = it::id_type;
@@ -49,7 +49,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::string>& sourceCode, Logg
 
 	for (size_t i = 0; i < sourceCode.size(); ++i)
 	{
-		char token = Tokenize(sourceCode[i]);
+		char token = Tokenize(sourceCode[i].first);
 		if (token == EOF)
 		{
 			throw ERROR_THROW(129);
@@ -60,18 +60,18 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::string>& sourceCode, Logg
 		switch (token)
 		{
 		case LEX_CONCAT:
-			idTableIndex = idtable.getIdIndexByName("", sourceCode[i], id_t::function);
+			idTableIndex = idtable.getIdIndexByName("", sourceCode[i].first, id_t::function);
 			if (idTableIndex == TI_NULLIDX)
 			{
-				idTableIndex = idtable.addEntry({ sourceCode[i], "", lextable.size(), type::str, id_t::function, "" });
+				idTableIndex = idtable.addEntry({ sourceCode[i].first, "", lextable.size(), type::str, id_t::function, "" });
 			}
 			break;
 
 		case LEX_PARSE_INT:
-			idTableIndex = idtable.getIdIndexByName("", sourceCode[i], id_t::function);
+			idTableIndex = idtable.getIdIndexByName("", sourceCode[i].first, id_t::function);
 			if (idTableIndex == TI_NULLIDX)
 			{
-				idTableIndex = idtable.addEntry({ sourceCode[i], "", lextable.size(), type::i32, id_t::function, "" });
+				idTableIndex = idtable.addEntry({ sourceCode[i].first, "", lextable.size(), type::i32, id_t::function, "" });
 			}
 			break;
 
@@ -81,38 +81,40 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::string>& sourceCode, Logg
 			{
 				if (lextable.declaredFunction())
 				{
-					lastFunctionName = sourceCode[i];
+					lastFunctionName = sourceCode[i].first;
 					currentScope = "";
 					idType = id_t::function;
-					idTableIndex = idtable.addEntry({ sourceCode[i], currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
+					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
 				}
 				else if (lextable.declaredVariable())
 				{
 					idType = id_t::variable;
-					idTableIndex = idtable.addEntry({ sourceCode[i], currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
+					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
 				}
 				else if (lextable.declaredDatatype())
 				{
 					idType = id_t::parameter;
-					idTableIndex = idtable.addEntry({ sourceCode[i], currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
+					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
 				}
 			}
 			break;
 
 		case LEX_INTEGER_LITERAL:
-			idTableIndex = idtable.getLiteralIndexByValue(atoi(sourceCode[i].c_str()));
+			idTableIndex = idtable.getLiteralIndexByValue(atoi(sourceCode[i].first.c_str()));
 			if (idTableIndex == TI_NULLIDX)
 			{
-				idTableIndex = idtable.addEntry({ "L" + std::to_string(lextable.size()), "", lextable.size(), type::i32, id_t::literal, sourceCode[i].c_str() });
+				idTableIndex = idtable.addEntry({ "L" + std::to_string(lextable.size()), "", lextable.size(), type::i32, id_t::literal, sourceCode[i].first.c_str() });
 			}
+			token = LEX_LITERAL;
 			break;
 
 		case LEX_STRING_LITERAL:
-			idTableIndex = idtable.getLiteralIndexByValue(sourceCode[i].c_str());
+			idTableIndex = idtable.getLiteralIndexByValue(sourceCode[i].first.c_str());
 			if (idTableIndex == TI_NULLIDX)
 			{
-				idTableIndex = idtable.addEntry({ "L" + std::to_string(lextable.size()), "", lextable.size(), type::str, id_t::literal, sourceCode[i].c_str() });
+				idTableIndex = idtable.addEntry({ "L" + std::to_string(lextable.size()), "", lextable.size(), type::str, id_t::literal, sourceCode[i].first.c_str() });
 			}
+			token = LEX_LITERAL;
 			break;
 
 		case LEX_OPENING_CURLY_BRACE:
@@ -137,9 +139,9 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::string>& sourceCode, Logg
 			break;
 		}
 
-		lextable.addEntry(LexTable::Entry(token, idTableIndex));
-	}
+		if (token == LEX_I32 || token == LEX_STR)
+			token = LEX_DATATYPE;
 
-	std::cout << lextable.dumpTable(0, lextable.size()) << '\n';
-	std::cout << idtable.dumpTable(0, idtable.size()) << '\n';
+		lextable.addEntry(LexTable::Entry(token, sourceCode[i].second, idTableIndex));
+	}
 }

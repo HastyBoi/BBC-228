@@ -78,7 +78,7 @@ namespace GRB {
 		return output;
 	}
 
-	short Greibach::getRule(GRBALPHABET nn, Rule& rule) {
+	short Greibach::getRule(GRBALPHABET nn, Rule& rule) const {
 		short output = -1;
 		short i = 0;
 
@@ -93,7 +93,7 @@ namespace GRB {
 		return output;
 	}
 
-	Rule Greibach::getRule(short n) {
+	Rule Greibach::getRule(short n) const {
 		if (n < 0 || n > size) {
 			throw ERROR_THROW(609);
 		}
@@ -106,22 +106,20 @@ namespace GRB {
 		const Greibach greibach(NS('S'), TS('$'),
 			6,
 			Rule(NS('S'), GRB_ERROR_SERIES + 0,
-				4,
-				Rule::Chain(8, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';')),
-				Rule::Chain(14, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
-				Rule::Chain(9, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
-				Rule::Chain(13, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'))
+				3,
+				Rule::Chain(11, TS('f'), TS('t'), TS('m'), TS('('), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}')),
+				Rule::Chain(13, TS('f'), TS('t'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), NS('S')),
+				Rule::Chain(12, TS('f'), TS('t'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'))
 			),
 			Rule(NS('N'), GRB_ERROR_SERIES + 1,
-				13,
+				12,
 				Rule::Chain(4, TS('d'), TS('t'), TS('i'), TS(';')),
+				Rule::Chain(6, TS('d'), TS('t'), TS('i'), TS('='), NS('E'), TS(';')),
+				Rule::Chain(6, TS('d'), TS('t'), TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
 				Rule::Chain(3, TS('r'), NS('E'), TS(';')),
 				Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
-				Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';')),
-				Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),
 				Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
 				Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
-				Rule::Chain(9, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N')),
 				Rule::Chain(4, TS('p'), TS('i'), TS(';'), NS('N')),
 				Rule::Chain(4, TS('p'), TS('l'), TS(';'), NS('N')),
 				Rule::Chain(3, TS('p'), TS('i'), TS(';')),

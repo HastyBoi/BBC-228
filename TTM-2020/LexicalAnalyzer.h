@@ -8,12 +8,12 @@ namespace TTM
 	class LexicalAnalyzer
 	{
 	public:
-		LexicalAnalyzer(const LexTable& lextable, const IdTable& idtable);
+		LexicalAnalyzer(LexTable& lextable, IdTable& idtable);
 
-		void Scan(const std::vector<std::string>& sourceCode, Logger& log);
+		void Scan(const std::vector<std::pair<std::string, int>>& sourceCode, Logger& log);
 	private:
-		LexTable lextable;
-		IdTable idtable;
+		LexTable& lextable;
+		IdTable& idtable;
 
 		char Tokenize(const std::string& str);
 	};

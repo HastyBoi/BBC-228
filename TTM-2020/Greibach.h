@@ -43,8 +43,8 @@ namespace GRB {
 		Greibach();
 		Greibach(GRBALPHABET startN, GRBALPHABET stbottomT, short size, Rule r, ...);
 
-		short getRule(GRBALPHABET nn, Rule& rule);
-		Rule getRule(short n);
+		short getRule(GRBALPHABET nn, Rule& rule) const;
+		Rule getRule(short n) const;
 	};
 	const Greibach getGreibach();
 }

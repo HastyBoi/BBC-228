@@ -23,6 +23,7 @@ void TTM::InputFileReader::read(const char* inFilePath)
 		if (readChar == in::endl) {
 			++m_linesCount;
 			column = 0;
+			m_fileText.push_back(in::endl);
 		}
 
 		switch (m_codeTable[readChar])
@@ -67,24 +68,33 @@ void TTM::InputFileReader::read(const char* inFilePath)
 	inputFile.close();
 }
 
-std::vector<std::string> TTM::InputFileReader::splitStringByDelimiter(std::string s, char delimiter)
+std::vector<std::pair<std::string, int>> TTM::InputFileReader::splitStringByDelimiter(std::string s, char delimiter)
 {
-	std::vector<std::string> output;
+	std::vector<std::pair<std::string, int>> output;
 	output.reserve(std::count_if(s.begin(), s.end(), [&](char c) { return c == delimiter; }) + 1);
 
+	int lineNumber = 1;
 	size_t start = 0;
 	size_t end = s.find(delimiter);
 
 	while (end != std::string::npos)
 	{
-		output.push_back(s.substr(start, end - start));
+		std::string substr = s.substr(start, end - start);
+		if (substr.find(in::endl) != std::string::npos)
+		{
+			++lineNumber;
+		}
+		else
+		{
+			output.push_back({ substr, lineNumber });
+		}
 		start = end + 1;
 		end = s.find(delimiter, start);
 	}
 
 	std::string last_element = s.substr(start, end);
 	if (!last_element.empty() && last_element.find(delimiter) == std::string::npos)
-		output.push_back(s.substr(start, end));
+		output.push_back({ last_element, lineNumber });
 
 	return output;
 }
