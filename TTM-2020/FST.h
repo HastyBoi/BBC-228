@@ -36,34 +36,6 @@ FST::NODE())
 
 #pragma endregion
 
-#pragma region PARSE_INT
-
-#define FST_PARSE_INT FST::FST(9,\
-FST::NODE(1, FST::RELATION('p', 1)),\
-FST::NODE(1, FST::RELATION('a', 2)),\
-FST::NODE(1, FST::RELATION('r', 3)),\
-FST::NODE(1, FST::RELATION('s', 4)),\
-FST::NODE(1, FST::RELATION('e', 5)),\
-FST::NODE(1, FST::RELATION('I', 6)),\
-FST::NODE(1, FST::RELATION('n', 7)),\
-FST::NODE(1, FST::RELATION('t', 8)),\
-FST::NODE())
-
-#pragma endregion
-
-#pragma region CONCAT
-
-#define FST_CONCAT FST::FST(7,\
-FST::NODE(1, FST::RELATION('c', 1)),\
-FST::NODE(1, FST::RELATION('o', 2)),\
-FST::NODE(1, FST::RELATION('n', 3)),\
-FST::NODE(1, FST::RELATION('c', 4)),\
-FST::NODE(1, FST::RELATION('a', 5)),\
-FST::NODE(1, FST::RELATION('t', 6)),\
-FST::NODE())
-
-#pragma endregion
-
 #pragma region IF
 
 #define FST_IF FST::FST(3,\

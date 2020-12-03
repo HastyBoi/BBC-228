@@ -11,8 +11,6 @@
 #define LEX_STRING_LITERAL				'2'
 #define LEX_LITERAL						'l'
 #define LEX_FN							'f'
-#define LEX_PARSE_INT					'P'
-#define LEX_CONCAT						'C'
 #define LEX_IF							'I'
 #define LEX_ELSE						'E'
 #define LEX_LET							'd'

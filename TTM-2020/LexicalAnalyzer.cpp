@@ -9,7 +9,7 @@ TTM::LexicalAnalyzer::LexicalAnalyzer(LexTable& lextable, IdTable& idtable)
 char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 {
 	FST::FST nanomachinesSon[] = {
-		FST_I32, FST_STR, FST_FN, FST_PARSE_INT, FST_IF, FST_ELSE, FST_CONCAT, FST_LET,
+		FST_I32, FST_STR, FST_FN, FST_IF, FST_ELSE, FST_LET,
 		FST_RET, FST_ECHO, FST_MAIN,
 		FST_OPENING_PARENTHESIS, FST_CLOSING_PARENTHESIS, FST_SEMICOLON, FST_COMMA,
 		FST_OPENING_CURLY_BRACE, FST_CLOSING_CURLY_BRACE,
@@ -20,7 +20,7 @@ char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 	};
 	const int size = sizeof(nanomachinesSon) / sizeof(nanomachinesSon[0]);
 	const char tokens[] = {
-		LEX_I32, LEX_STR, LEX_FN, LEX_PARSE_INT, LEX_IF, LEX_ELSE, LEX_CONCAT, LEX_LET,
+		LEX_I32, LEX_STR, LEX_FN, LEX_IF, LEX_ELSE, LEX_LET,
 		LEX_RET, LEX_ECHO, LEX_MAIN,
 		LEX_OPENING_PARENTHESIS, LEX_CLOSING_PARENTHESIS, LEX_SEMICOLON, LEX_COMMA,
 		LEX_OPENING_CURLY_BRACE, LEX_CLOSING_CURLY_BRACE,
@@ -64,22 +64,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 
 		switch (token)
 		{
-		case LEX_CONCAT:
-			idTableIndex = idtable.getIdIndexByName("", name);
-			if (idTableIndex == TI_NULLIDX)
-			{
-				idTableIndex = idtable.addEntry({ name, "", lextable.size(), type::str, id_t::function, "" });
-			}
-			break;
-
-		case LEX_PARSE_INT:
-			idTableIndex = idtable.getIdIndexByName("", name);
-			if (idTableIndex == TI_NULLIDX)
-			{
-				idTableIndex = idtable.addEntry({ name, "", lextable.size(), type::i32, id_t::function, "" });
-			}
-			break;
-
 		case LEX_MAIN:
 			idTableIndex = idtable.getIdIndexByName("", name);
 			if (idTableIndex == TI_NULLIDX)
