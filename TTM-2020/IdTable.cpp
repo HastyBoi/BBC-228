@@ -83,18 +83,25 @@ int TTM::IdTable::getLiteralIndexByValue(const char* value) {
 	return TI_NULLIDX;
 }
 
-//todo dumpTable
 std::string TTM::IdTable::dumpTable(size_t startIndex, size_t endIndex) const
 {
 	std::stringstream output;
 
 	startIndex = std::clamp(startIndex, 0U, m_table.size());
-	endIndex = std::clamp(endIndex, startIndex, m_table.size());
+	if (endIndex == 0)
+	{
+		endIndex = m_table.size();
+	}
+	else
+	{
+		endIndex = std::clamp(endIndex, startIndex, m_table.size());
+	}
 
-	output << "idtable\n";
+	output << std::setw(5) << "index" << std::setw(20) << "name" << std::setw(20) << "scope"
+		<< std::setw(10) << "type" << std::setw(10) << "id type" << std::setw(20) << "lexTable index" << '\n';
 	for (size_t i = startIndex; i < endIndex; ++i)
 	{
-		output << std::setw(4) << i << std::setw(15) << m_table[i].name << std::setw(10) << m_table[i].scope << std::setw(10);
+		output << std::setw(4) << i << std::setw(20) << m_table[i].name << std::setw(20) << m_table[i].scope << std::setw(10);
 		if (m_table[i].dataType == it::data_type::i32)
 			output << "i32 ";
 		else if (m_table[i].dataType == it::data_type::str)
@@ -110,7 +117,7 @@ std::string TTM::IdTable::dumpTable(size_t startIndex, size_t endIndex) const
 		else if (m_table[i].idType == it::id_type::variable)
 			output << "v ";
 
-		output << std::setw(10) << m_table[i].lexTableIndex;
+		output << std::setw(15) << m_table[i].lexTableIndex;
 		output << '\n';
 	}
 

@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "MFST.h"
 #include "Error.h"
 #include "FST.h"
 #include "Greibach.h"
@@ -7,7 +8,6 @@
 #include "LexicalAnalyzer.h"
 #include "Logger.h"
 #include "LexTable.h"
-#include "MFST.h"
 #include "CommandLineArgumentsParser.h"
 #include "PolishNotation.h"
 #include "SemanticAnalyzer.h"
@@ -57,11 +57,22 @@ int main(int argc, char** argv)
 		LexicalAnalyzer lexer{ lextable, idtable };
 		lexer.Scan(splitted, log);
 
-		std::cout << lextable.dumpTable(0, lextable.size());
-
 		MFST_TRACE_START(log)
 			MFST::Mfst mfst{ lextable, GRB::getGreibach() };
 		mfst.start(log);
+
+		if (commandLineArguments.lexTableFilePath())
+		{
+			std::ofstream lexTableFile(commandLineArguments.lexTableFilePath());
+			lexTableFile << lextable.dumpTable();
+			lexTableFile.close();
+		}
+		if (commandLineArguments.idTableFilePath())
+		{
+			std::ofstream idTableFile(commandLineArguments.idTableFilePath());
+			idTableFile << idtable.dumpTable();
+			idTableFile.close();
+		}
 
 		log.closeFile();
 	}
@@ -77,7 +88,7 @@ int main(int argc, char** argv)
 			std::cerr << "позиция " << e.inext.col << ' ';
 		}
 		std::cerr << '\n';
-	}
+		}
 
 #ifdef _DEBUG
 	int hasMemoryLeaks = _CrtDumpMemoryLeaks();
@@ -85,4 +96,4 @@ int main(int argc, char** argv)
 	system("pause");
 #endif // _DEBUG
 	return 0;
-}
+	}

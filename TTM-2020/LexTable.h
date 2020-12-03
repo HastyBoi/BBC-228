@@ -55,7 +55,7 @@ namespace TTM {
 
 		LexTable(size_t capacity = 0);
 		void addEntry(const LexTable::Entry& entry);
-		std::string dumpTable(size_t startIndex, size_t endIndex) const;
+		std::string dumpTable(size_t startIndex = 0, size_t endIndex = 0) const;
 
 		bool declaredFunction() const
 		{

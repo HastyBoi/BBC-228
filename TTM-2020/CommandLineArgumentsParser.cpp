@@ -4,7 +4,7 @@
 
 TTM::CommandLineArgumentsParser::CommandLineArgumentsParser(int argc, char** argv)
 {
-	if (argc <= 1 || getOption(argv + 1, argv + argc, delimiter + defaultInKey) == nullptr)
+	if (argc <= 1 || getOption(argv + 1, argv + argc, delimiter + inKey) == nullptr)
 		throw ERROR_THROW(100);
 
 	auto findPathByKey = [&](const std::string& key)
@@ -13,18 +13,35 @@ TTM::CommandLineArgumentsParser::CommandLineArgumentsParser(int argc, char** arg
 		return (path == nullptr) ? m_inFilePath + '.' + key : path;
 	};
 
-	m_inFilePath = findPathByKey(defaultInKey);
-	m_outFilePath = findPathByKey(defaultOutKey);
-	m_logFilePath = findPathByKey(defaultLogKey);
+	m_inFilePath = findPathByKey(inKey);
+	m_outFilePath = findPathByKey(outKey);
+	m_logFilePath = findPathByKey(logKey);
+
+	if (optionExists(argv + 1, argv + argc, delimiter + lexKey))
+	{
+		m_lexTablePath = m_inFilePath + '.' + lexKey + ".txt";
+	}
+	if (optionExists(argv + 1, argv + argc, delimiter + idKey))
+	{
+		m_idTablePath = m_inFilePath + '.' + idKey + ".txt";
+	}
 }
 
 std::vector<std::string> TTM::CommandLineArgumentsParser::getAllParameters() const
 {
 	std::vector<std::string> parameters;
-	parameters.reserve(3);
-	parameters.push_back(delimiter + defaultInKey + " " + m_inFilePath);
-	parameters.push_back(delimiter + defaultOutKey + " " + m_outFilePath);
-	parameters.push_back(delimiter + defaultLogKey + " " + m_logFilePath);
+	parameters.reserve(5);
+	parameters.push_back(delimiter + inKey + " " + m_inFilePath);
+	parameters.push_back(delimiter + outKey + " " + m_outFilePath);
+	parameters.push_back(delimiter + logKey + " " + m_logFilePath);
+	if (!m_lexTablePath.empty())
+	{
+		parameters.push_back(delimiter + lexKey + " " + m_lexTablePath);
+	}
+	if (!m_idTablePath.empty())
+	{
+		parameters.push_back(delimiter + idKey + " " + m_idTablePath);
+	}
 	return parameters;
 }
 

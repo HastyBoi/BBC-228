@@ -11,18 +11,24 @@ namespace TTM
 		const char* inFilePath() const { return m_inFilePath.c_str(); }
 		const char* outFilePath() const { return m_outFilePath.c_str(); }
 		const char* logFilePath() const { return m_logFilePath.c_str(); }
+		const char* lexTableFilePath() const { return m_lexTablePath.c_str(); }
+		const char* idTableFilePath() const { return m_idTablePath.c_str(); }
 
 		std::vector<std::string> getAllParameters() const;
 
 	private:
 		const char delimiter = '-';
-		const std::string defaultInKey = "in";
-		const std::string defaultOutKey = "out";
-		const std::string defaultLogKey = "log";
+		const std::string inKey = "in";
+		const std::string outKey = "out";
+		const std::string logKey = "log";
+		const std::string lexKey = "lex";
+		const std::string idKey = "id";
 
 		std::string m_inFilePath;
 		std::string m_outFilePath;
 		std::string m_logFilePath;
+		std::string m_lexTablePath;
+		std::string m_idTablePath;
 
 		static bool optionExists(char** begin, char** end, std::string option);
 		static char* getOption(char** begin, char** end, std::string option);
