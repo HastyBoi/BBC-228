@@ -47,7 +47,8 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 	std::string currentScope = "";
 	std::string previousScope = currentScope;
 	std::string lastFunctionName = "";
-	id_t idType;
+	id_t idType = id_t::unknown;
+	type dataType = type::undefined;
 
 	for (size_t i = 0; i < sourceCode.size(); ++i)
 	{
@@ -55,7 +56,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 		if (token == EOF)
 		{
 			//todo add new error type
-			//std::cerr << sourceCode[i].second << " " << sourceCode[i].first << '\n';
 			throw ERROR_THROW_IN(129, sourceCode[i].second, -1);
 		}
 
@@ -88,17 +88,17 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 					lastFunctionName = sourceCode[i].first;
 					currentScope = "";
 					idType = id_t::function;
-					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
+					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), dataType, idType, "" });
 				}
 				else if (lextable.declaredVariable())
 				{
 					idType = id_t::variable;
-					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
+					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), dataType, idType, "" });
 				}
 				else if (lextable.declaredDatatype())
 				{
 					idType = id_t::parameter;
-					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), lextable.getDatatypeFromDeclaration(), idType, "" });
+					idTableIndex = idtable.addEntry({ sourceCode[i].first, currentScope, lextable.size(), dataType, idType, "" });
 				}
 			}
 			break;
@@ -110,6 +110,16 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 				idTableIndex = idtable.addEntry({ "L" + std::to_string(lextable.size()), "", lextable.size(), type::i32, id_t::literal, sourceCode[i].first.c_str() });
 			}
 			token = LEX_LITERAL;
+			break;
+
+		case LEX_I32:
+			dataType = type::i32;
+			token = LEX_DATATYPE;
+			break;
+
+		case LEX_STR:
+			dataType = type::str;
+			token = LEX_DATATYPE;
 			break;
 
 		case LEX_STRING_LITERAL:
@@ -142,9 +152,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 		default:
 			break;
 		}
-
-		if (token == LEX_I32 || token == LEX_STR)
-			token = LEX_DATATYPE;
 
 		lextable.addEntry(LexTable::Entry(token, sourceCode[i].second, idTableIndex));
 	}

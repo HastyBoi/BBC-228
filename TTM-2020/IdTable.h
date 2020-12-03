@@ -11,8 +11,8 @@ namespace TTM
 {
 	namespace it
 	{
-		enum class data_type { i32, str };
-		enum class id_type { variable, function, parameter, literal };
+		enum class data_type { i32, str, undefined };
+		enum class id_type { variable, function, parameter, literal, unknown };
 	}
 
 	class IdTable

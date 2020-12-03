@@ -74,18 +74,6 @@ namespace TTM {
 					|| m_table[m_table.size() - 1].lexeme == LEX_STR);
 		}
 
-		it::data_type getDatatypeFromDeclaration() const
-		{
-			if (m_table.size() >= 1 && m_table[m_table.size() - 1].lexeme == LEX_I32)
-			{
-				return it::data_type::i32;
-			}
-			else
-			{
-				return it::data_type::str;
-			}
-		}
-
 		int size() const { return m_table.size(); }
 
 		const Entry& operator[](size_t index) const
