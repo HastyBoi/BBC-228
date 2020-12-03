@@ -23,12 +23,28 @@ void TTM::InputFileReader::read(const char* inFilePath)
 		if (readChar == in::endl) {
 			++m_linesCount;
 			column = 0;
+			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
+			{
+				m_fileText.push_back(in::delimiter);
+			}
 			m_fileText.push_back(in::endl);
 		}
 
 		switch (m_codeTable[readChar])
 		{
 		case in::T:
+			m_fileText.push_back(readChar);
+			break;
+
+		case in::F:
+			throw ERROR_THROW_IN(111, m_linesCount, column);
+			break;
+
+		case in::I:
+			++m_ignoredCharsCount;
+			break;
+
+		case in::O:
 			m_fileText.push_back(readChar);
 			break;
 
@@ -43,24 +59,20 @@ void TTM::InputFileReader::read(const char* inFilePath)
 			m_fileText.push_back(readChar);
 			break;
 
-		case in::O:
+		case in::S:
 			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
+			{
 				m_fileText.push_back(in::delimiter);
+			}
 			m_fileText.push_back(readChar);
 			m_fileText.push_back(in::delimiter);
 			break;
 
-		case in::I:
-			++m_ignoredCharsCount;
-			break;
-
-		case in::F:
-			throw ERROR_THROW_IN(111, m_linesCount, column);
-			break;
-
 		default:
 			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
+			{
 				m_fileText.push_back(m_codeTable[readChar]);
+			}
 			break;
 		}
 	}

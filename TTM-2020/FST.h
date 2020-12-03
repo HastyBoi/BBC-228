@@ -96,7 +96,7 @@ FST::NODE())
 
 #pragma region RET
 
-#define FST_RETURN FST::FST(4,\
+#define FST_RET FST::FST(4,\
 FST::NODE(1, FST::RELATION('r', 1)),\
 FST::NODE(1, FST::RELATION('e', 2)),\
 FST::NODE(1, FST::RELATION('t', 3)),\
@@ -235,7 +235,7 @@ FST::NODE())
 
 #define FST_NOT_EQUALS FST::FST(3,\
 FST::NODE(1, FST::RELATION('!', 1)),\
-FST::NODE(1, FST::RELATION('=', 1)),\
+FST::NODE(1, FST::RELATION('=', 2)),\
 FST::NODE())
 
 #pragma endregion
@@ -260,7 +260,7 @@ FST::NODE())
 
 #define FST_LESS_OR_EQUALS FST::FST(3,\
 FST::NODE(1, FST::RELATION('<', 1)),\
-FST::NODE(1, FST::RELATION('=', 1)),\
+FST::NODE(1, FST::RELATION('=', 2)),\
 FST::NODE())
 
 #pragma endregion
@@ -269,7 +269,7 @@ FST::NODE())
 
 #define FST_GREATER_OR_EQUALS FST::FST(3,\
 FST::NODE(1, FST::RELATION('>', 1)),\
-FST::NODE(1, FST::RELATION('=', 1)),\
+FST::NODE(1, FST::RELATION('=', 2)),\
 FST::NODE())
 
 #pragma endregion

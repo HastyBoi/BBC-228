@@ -8,7 +8,7 @@
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 
-#define TRACE
+//#define TRACE
 
 #ifdef TRACE
 
@@ -47,14 +47,14 @@
 
 #else
 
-#define MFST_TRACE_START ;
-#define MFST_TRACE1 ;
-#define MFST_TRACE2 ;
-#define MFST_TRACE3 ;
-#define MFST_TRACE4(c) ;
-#define MFST_TRACE5(c) ;
-#define MFST_TRACE6(c,k) ;
-#define MFST_TRACE7 ;
+#define MFST_TRACE_START(log) ;
+#define MFST_TRACE1(log) ;
+#define MFST_TRACE2(log) ;
+#define MFST_TRACE3(log) ;
+#define MFST_TRACE4(log,c) ;
+#define MFST_TRACE5(log,c) ;
+#define MFST_TRACE6(log,c,k) ;
+#define MFST_TRACE7(log) ;
 
 #endif // TRACE
 

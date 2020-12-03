@@ -57,6 +57,8 @@ int main(int argc, char** argv)
 		LexicalAnalyzer lexer{ lextable, idtable };
 		lexer.Scan(splitted, log);
 
+		std::cout << lextable.dumpTable(0, lextable.size());
+
 		MFST_TRACE_START(log)
 			MFST::Mfst mfst{ lextable, GRB::getGreibach() };
 		mfst.start(log);
@@ -65,11 +67,16 @@ int main(int argc, char** argv)
 	}
 	catch (Error::ERROR e)
 	{
-		std::cerr << e.message << '\n';
-		if (e.inext.line > 0 && e.inext.col > 0)
+		std::cerr << e.message << ' ';
+		if (e.inext.line > 0)
 		{
-			std::cerr << "строка " << e.inext.line << " позиция " << e.inext.col << '\n';
+			std::cerr << "строка " << e.inext.line << ' ';
 		}
+		if (e.inext.col > 0)
+		{
+			std::cerr << "позиция " << e.inext.col << ' ';
+		}
+		std::cerr << '\n';
 	}
 
 #ifdef _DEBUG

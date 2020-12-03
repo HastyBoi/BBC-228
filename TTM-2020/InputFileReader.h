@@ -6,17 +6,18 @@ namespace TTM
 	{
 		constexpr auto endl = '\n';
 		constexpr auto delimiter = '|';
-		enum { T = 1024, F = 2048, I = 4096, O = 8192, Q = 16384 };
+		// T - допустимый символ, F - недопустимый, I - игнорировать, O - операция, Q - ', S - сепаратор, иначе - заменить
+		enum { T = 1024, F = 2048, I = 4096, O = 8192, Q = 16384, S = 32768 };
 
 #define IN_CODE_TABLE \
 			in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::delimiter,in::delimiter, in::F, in::F, in::I, in::F, in::F, \
 			in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, \
-			in::delimiter, in::F, in::F, in::F, in::F, in::O, in::F, in::Q, in::O, in::O, in::O, in::O, in::O, in::O, in::F, in::O, \
-			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::F, in::O, in::F, in::O, in::O, in::F, \
+			in::delimiter, in::O, in::F, in::F, in::F, in::O, in::F, in::Q, in::S, in::S, in::O, in::O, in::S, in::O, in::F, in::O, \
+			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::F, in::S, in::O, in::O, in::O, in::F, \
 			in::F, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, \
 			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::F, in::F, in::F, in::F, in::F, \
 			in::F, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, \
-			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::O, in::F, in::O, in::F, in::F, \
+			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::S, in::F, in::S, in::F, in::F, \
 																															\
 			in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, \
 			in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, \
@@ -38,7 +39,6 @@ namespace TTM
 		const std::string& fileText() const { return m_fileText; }
 
 		int m_codeTable[256];
-		// T - допустимый символ, F - недопустимый, I - игнорировать, O - операция, Q - ', иначе - заменить
 
 		InputFileReader();
 		void read(const char* inFilePath);
