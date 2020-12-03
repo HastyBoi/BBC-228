@@ -47,6 +47,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 	std::string currentScope = "";
 	std::string previousScope = currentScope;
 	std::string lastFunctionName = "";
+
 	id_t idType = id_t::unknown;
 	type dataType = type::undefined;
 
@@ -56,7 +57,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 		if (token == EOF)
 		{
 			//todo add new error type (output token)
-			throw ERROR_THROW_IN(129, lineNumber, -1);
+			throw ERROR_THROW_LEX(129, lineNumber);
 		}
 
 		int idTableIndex = TI_NULLIDX;
@@ -84,9 +85,9 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			if (idTableIndex == TI_NULLIDX)
 			{
 				if (!lextable.declaredFunction())
-					throw ERROR_THROW_IN(120, lineNumber, -1);
+					throw ERROR_THROW_LEX(120, lineNumber);
 				if (dataType != type::i32)
-					throw ERROR_THROW_IN(121, lineNumber, -1);
+					throw ERROR_THROW_LEX(121, lineNumber);
 
 				idTableIndex = idtable.addEntry({ name, "", lextable.size(), dataType, id_t::function, "" });
 				idType = id_t::unknown;
@@ -94,7 +95,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			}
 			else if (lextable.declaredFunction())
 			{
-				throw ERROR_THROW_IN(131, lineNumber, -1);
+				throw ERROR_THROW_LEX(131, lineNumber);
 			}
 			break;
 
@@ -118,13 +119,13 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 				}*/
 				else
 				{
-					throw ERROR_THROW_IN(124, lineNumber, -1);
+					throw ERROR_THROW_LEX(124, lineNumber);
 				}
 
 				if (idType == id_t::unknown)
-					throw ERROR_THROW_IN(120, lineNumber, -1);
+					throw ERROR_THROW_LEX(120, lineNumber);
 				if (dataType == type::undefined)
-					throw ERROR_THROW_IN(121, lineNumber, -1);
+					throw ERROR_THROW_LEX(121, lineNumber);
 
 				idTableIndex = idtable.addEntry({ name, currentScope, lextable.size(), dataType, idType, "" });
 				idType = id_t::unknown;
@@ -132,7 +133,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			}
 			else if (lextable.declaredVariable() || lextable.declaredFunction())
 			{
-				throw ERROR_THROW_IN(123, lineNumber, -1);
+				throw ERROR_THROW_LEX(123, lineNumber);
 			}
 
 			break;
@@ -166,19 +167,12 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			break;
 
 		case LEX_OPENING_CURLY_BRACE:
-			previousScope = currentScope;
-			currentScope = lastFunctionName;
-			break;
-
-		case LEX_CLOSING_CURLY_BRACE:
-			currentScope = previousScope;
-			break;
-
 		case LEX_OPENING_PARENTHESIS:
 			previousScope = currentScope;
 			currentScope = lastFunctionName;
 			break;
 
+		case LEX_CLOSING_CURLY_BRACE:
 		case LEX_CLOSING_PARENTHESIS:
 			currentScope = previousScope;
 			break;

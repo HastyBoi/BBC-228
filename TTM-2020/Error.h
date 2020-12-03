@@ -1,6 +1,7 @@
 #pragma once
 #define ERROR_THROW(id) Error::getErrorByCode(id);
 #define	ERROR_THROW_IN(id, l, c) Error::getErrorInByCode(id, l, c);
+#define	ERROR_THROW_LEX(id, l) Error::getErrorInByCode(id, l);
 #define ERROR_ENTRY(id, m) {id, m, {-1, -1}}
 #define ERROR_MAXSIZE_MESSAGE 200
 #define ERROR_ENTRY_NODEF(id)		ERROR_ENTRY(-id, "Неопределенная ошибка")
@@ -14,8 +15,10 @@
 									ERROR_ENTRY_NODEF10(id+80),ERROR_ENTRY_NODEF10(id+90)
 #define ERROR_MAX_ENTRY 1000
 
-namespace Error {
-	struct ERROR {
+namespace Error
+{
+	struct ERROR
+	{
 		int id = 0;
 		std::string message;
 		struct in {
@@ -25,5 +28,5 @@ namespace Error {
 	};
 
 	constexpr ERROR& getErrorByCode(int code);
-	ERROR getErrorInByCode(int code, int line, int col);
+	ERROR getErrorInByCode(int code, int line = -1, int col = -1);
 }

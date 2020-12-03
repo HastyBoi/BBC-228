@@ -107,12 +107,12 @@ std::vector<std::pair<std::string, int>> TTM::InputFileReader::splitStringByDeli
 	output.reserve(std::count_if(s.begin(), s.end(), [&](char c) { return c == delimiter; }) + 1);
 
 	int lineNumber = 1;
-	size_t Start = 0;
+	size_t start = 0;
 	size_t end = s.find(delimiter);
 
 	while (end != std::string::npos)
 	{
-		std::string substr = s.substr(Start, end - Start);
+		std::string substr = s.substr(start, end - start);
 		if (substr.find(in::endl) != std::string::npos)
 		{
 			++lineNumber;
@@ -121,11 +121,11 @@ std::vector<std::pair<std::string, int>> TTM::InputFileReader::splitStringByDeli
 		{
 			output.push_back({ substr, lineNumber });
 		}
-		Start = end + 1;
-		end = s.find(delimiter, Start);
+		start = end + 1;
+		end = s.find(delimiter, start);
 	}
 
-	std::string last_element = s.substr(Start, end);
+	std::string last_element = s.substr(start, end);
 	if (!last_element.empty() && last_element.find(delimiter) == std::string::npos)
 		output.push_back({ last_element, lineNumber });
 

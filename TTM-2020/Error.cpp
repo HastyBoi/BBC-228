@@ -76,7 +76,7 @@ constexpr ERROR& Error::getErrorByCode(int id) {
 	return errors[std::clamp(id, 0, ERROR_MAX_ENTRY)];
 }
 
-ERROR Error::getErrorInByCode(int id, int line = -1, int col = -1) {
+ERROR Error::getErrorInByCode(int id, int line, int col) {
 	ERROR e;
 
 	e = Error::getErrorByCode(id);
