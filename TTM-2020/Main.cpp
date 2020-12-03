@@ -39,9 +39,7 @@ int main(int argc, char** argv)
 		auto parametersList = commandLineArguments.getAllParameters();
 		log << "---- Параметры --------\n";
 		for (std::string p : parametersList)
-		{
 			log << p << '\n';
-		}
 
 		InputFileReader in;
 		in.read(commandLineArguments.inFilePath());
@@ -106,4 +104,4 @@ int main(int argc, char** argv)
 	system("pause");
 #endif // _DEBUG
 	return 0;
-	}
+}
