@@ -29,7 +29,7 @@ ERROR errors[ERROR_MAX_ENTRY] = {
 	ERROR_ENTRY_NODEF(116), ERROR_ENTRY_NODEF(117), ERROR_ENTRY_NODEF(118), ERROR_ENTRY_NODEF(119),
 	ERROR_ENTRY(120, "Некорректный тип идентификатора"),
 	ERROR_ENTRY(121, "Некорректный тип данных"),
-	ERROR_ENTRY(122, "Выход за пределы таблицы лексем"),
+	ERROR_ENTRY(122, "Несогласованное число скобок"),
 	ERROR_ENTRY(123, "Повторное объявление лексемы"),
 	ERROR_ENTRY(124, "Идентификатор не объявлен или объявлен некорректно"),
 	ERROR_ENTRY(125, "Неверное объявление идентификатора"),

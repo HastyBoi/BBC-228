@@ -53,8 +53,10 @@ int main(int argc, char** argv)
 		auto splitted = InputFileReader::splitStringByDelimiter(in.fileText(), in::delimiter);
 		LexTable lextable{ splitted.size() };
 		IdTable idtable{};
+
 		LexicalAnalyzer lexicalAnalyzer{ lextable, idtable };
 		lexicalAnalyzer.Scan(splitted, log);
+
 		SyntaxAnalyzer syntaxAnalyzer{ lextable, GRB::getGreibach() };
 		syntaxAnalyzer.Start(log);
 

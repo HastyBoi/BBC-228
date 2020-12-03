@@ -55,3 +55,8 @@ bool TTM::LexTable::hasLexeme(char lexeme) const
 
 	return false;
 }
+
+int TTM::LexTable::lexemeCount(char lexeme) const
+{
+	return std::count_if(m_table.begin(), m_table.end(), [&](const Entry& e) {return e.lexeme == lexeme; });
+}

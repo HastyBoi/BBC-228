@@ -193,5 +193,9 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 	if (!lextable.hasLexeme(LEX_MAIN))
 		throw ERROR_THROW(130);
 
+	if (lextable.lexemeCount(LEX_OPENING_PARENTHESIS) != lextable.lexemeCount(LEX_CLOSING_PARENTHESIS)
+		|| lextable.lexemeCount(LEX_OPENING_CURLY_BRACE) != lextable.lexemeCount(LEX_CLOSING_CURLY_BRACE))
+		throw ERROR_THROW(122);
+
 	log << "Лексический анализ выполнен без ошибок\n";
 }

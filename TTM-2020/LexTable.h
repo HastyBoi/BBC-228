@@ -76,6 +76,8 @@ namespace TTM
 
 		bool hasLexeme(char lexeme) const;
 
+		int lexemeCount(char lexeme) const;
+
 		const Entry& operator[](size_t index) const
 		{
 			return m_table[index];
