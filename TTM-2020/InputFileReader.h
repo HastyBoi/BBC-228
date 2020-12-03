@@ -4,9 +4,9 @@ namespace TTM
 {
 	namespace in
 	{
-		constexpr auto endl = '\n';
-		constexpr auto delimiter = '|';
-		// T - допустимый символ, F - недопустимый, I - игнорировать, O - операция, Q - ', S - сепаратор, иначе - заменить
+		enum { endl = '\n', comment = '/', delimiter = '|' };
+
+		// T - допустимый символ, F - недопустимый, I - игнорировать, O - операция, Q - ', S - сепаратор
 		enum { T = 1024, F = 2048, I = 4096, O = 8192, Q = 16384, S = 32768 };
 
 #define IN_CODE_TABLE \

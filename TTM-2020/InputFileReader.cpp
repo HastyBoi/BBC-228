@@ -20,7 +20,8 @@ void TTM::InputFileReader::read(const char* inFilePath)
 	for (int readChar = 0, column = 0; (readChar = inputFile.get()) != EOF; ++m_fileSize)
 	{
 		++column;
-		if (readChar == in::endl) {
+		if (readChar == in::endl)
+		{
 			++m_linesCount;
 			column = 0;
 			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
@@ -29,10 +30,25 @@ void TTM::InputFileReader::read(const char* inFilePath)
 			}
 			m_fileText.push_back(in::endl);
 		}
+		else if (readChar == in::comment)
+		{
+			if (inputFile.peek() == in::comment)
+			{
+				do
+				{
+					readChar = inputFile.get();
+					++m_ignoredCharsCount;
+				} while (readChar != in::endl);
+			}
+		}
 
 		switch (m_codeTable[readChar])
 		{
 		case in::T:
+			if (!m_fileText.empty() && m_fileText.back() != in::delimiter && m_codeTable[m_fileText.back()] != in::T)
+			{
+				m_fileText.push_back(in::delimiter);
+			}
 			m_fileText.push_back(readChar);
 			break;
 
@@ -45,6 +61,10 @@ void TTM::InputFileReader::read(const char* inFilePath)
 			break;
 
 		case in::O:
+			if (!m_fileText.empty() && m_fileText.back() != in::delimiter && m_codeTable[m_fileText.back()] != in::O)
+			{
+				m_fileText.push_back(in::delimiter);
+			}
 			m_fileText.push_back(readChar);
 			break;
 
