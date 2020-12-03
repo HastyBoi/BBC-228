@@ -57,11 +57,11 @@ int main(int argc, char** argv)
 		LexicalAnalyzer lexicalAnalyzer{ lextable, idtable };
 		lexicalAnalyzer.Scan(splitted, log);
 
-		/*SyntaxAnalyzer syntaxAnalyzer{ lextable, GRB::getGreibach() };
+		SyntaxAnalyzer syntaxAnalyzer{ lextable, GRB::getGreibach() };
 		syntaxAnalyzer.Start(log);
 
 		SemanticAnalyzer semanticAnalyzer{ lextable, idtable };
-		semanticAnalyzer.Start(log);*/
+		semanticAnalyzer.Start(log);
 
 		if (commandLineArguments.lexTableFilePath())
 		{
@@ -76,12 +76,12 @@ int main(int argc, char** argv)
 			idTableFile.close();
 		}
 
-		/*if (commandLineArguments.traceFilePath())
+		if (commandLineArguments.traceFilePath())
 		{
 			std::ofstream traceFile(commandLineArguments.traceFilePath());
 			traceFile << syntaxAnalyzer.dumpTrace();
 			traceFile.close();
-		}*/
+		}
 
 		log.closeFile();
 	}
