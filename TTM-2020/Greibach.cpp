@@ -106,7 +106,8 @@ namespace GRB {
 		const Greibach greibach(NS('S'), TS('$'),
 			6,
 			Rule(NS('S'), GRB_ERROR_SERIES + 0,
-				2,
+				3,
+				Rule::Chain(4, TS('u'), TS('i'), TS('i'), NS('S')),
 				Rule::Chain(11, TS('f'), TS('t'), TS('m'), TS('('), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}')),
 				Rule::Chain(13, TS('f'), TS('t'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), NS('S'))
 			),

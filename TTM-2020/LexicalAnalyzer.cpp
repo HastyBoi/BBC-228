@@ -10,7 +10,7 @@ char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 {
 	FST::FST nanomachinesSon[] = {
 		FST_I32, FST_STR, FST_FN, FST_IF, FST_ELSE, FST_LET,
-		FST_RET, FST_ECHO, FST_MAIN,
+		FST_RET, FST_ECHO, FST_USE, FST_STDLIB, FST_MAIN,
 		FST_OPENING_PARENTHESIS, FST_CLOSING_PARENTHESIS, FST_SEMICOLON, FST_COMMA,
 		FST_OPENING_CURLY_BRACE, FST_CLOSING_CURLY_BRACE,
 		FST_PLUS, FST_MINUS, FST_ASTERISK, FST_SLASH, FST_PERCENT,
@@ -21,7 +21,7 @@ char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 	const int size = sizeof(nanomachinesSon) / sizeof(nanomachinesSon[0]);
 	const char tokens[] = {
 		LEX_I32, LEX_STR, LEX_FN, LEX_IF, LEX_ELSE, LEX_LET,
-		LEX_RET, LEX_ECHO, LEX_MAIN,
+		LEX_RET, LEX_ECHO, LEX_USE, LEX_STDLIB, LEX_MAIN,
 		LEX_OPENING_PARENTHESIS, LEX_CLOSING_PARENTHESIS, LEX_SEMICOLON, LEX_COMMA,
 		LEX_OPENING_CURLY_BRACE, LEX_CLOSING_CURLY_BRACE,
 		LEX_PLUS, LEX_MINUS, LEX_ASTERISK, LEX_SLASH, LEX_PERCENT,
@@ -64,6 +64,16 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 
 		switch (token)
 		{
+		case LEX_STDLIB:
+			if (lextable.declaredUseStdlib())
+			{
+				idTableIndex = idtable.addEntry({ "parseInt", "", lextable.size(), type::i32, id_t::function, "" });
+				lextable.addEntry({ LEX_ID, lineNumber, idTableIndex });
+				idTableIndex = idtable.addEntry({ "concat", "", lextable.size(), type::str, id_t::function, "" });
+				lextable.addEntry({ LEX_ID, lineNumber, idTableIndex });
+			}
+			break;
+
 		case LEX_MAIN:
 			idTableIndex = idtable.getIdIndexByName("", name);
 			if (idTableIndex == TI_NULLIDX)
@@ -97,10 +107,10 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 				{
 					idType = id_t::variable;
 				}
-				/*else if (lextable.declaredDatatype())
+				else if (lextable.declaredDatatype())
 				{
 					idType = id_t::parameter;
-				}*/
+				}
 				else
 				{
 					throw ERROR_THROW_LEX(124, lineNumber);
@@ -165,7 +175,10 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			break;
 		}
 
-		lextable.addEntry(LexTable::Entry(token, lineNumber, idTableIndex));
+		if (token != LEX_STDLIB)
+		{
+			lextable.addEntry(LexTable::Entry(token, lineNumber, idTableIndex));
+		}
 	}
 
 	if (!lextable.hasLexeme(LEX_MAIN))
