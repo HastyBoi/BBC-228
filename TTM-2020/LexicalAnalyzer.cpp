@@ -51,8 +51,9 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 	id_t idType = id_t::unknown;
 	type dataType = type::undefined;
 
-	for (const auto& [name, lineNumber] : sourceCode)
+	for (size_t i = 0; i < sourceCode.size(); ++i)
 	{
+		const auto& [name, lineNumber] = sourceCode[i];
 		char token = Tokenize(name);
 		if (token == EOF)
 		{
@@ -86,6 +87,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 				idTableIndex = idtable.addEntry({ name, "", lextable.size(), dataType, id_t::function, "" });
 				idType = id_t::unknown;
 				dataType = type::undefined;
+				lastFunctionName = name;
 			}
 			else if (lextable.declaredFunction())
 			{
@@ -94,7 +96,14 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			break;
 
 		case LEX_ID:
-			idTableIndex = idtable.getIdIndexByName(currentScope, name);
+			if (i < sourceCode.size() - 1 && Tokenize(sourceCode[i + 1].first) == LEX_OPENING_PARENTHESIS)
+			{
+				idTableIndex = idtable.getIdIndexByName("", name);
+			}
+			else
+			{
+				idTableIndex = idtable.getIdIndexByName(currentScope, name);
+			}
 			if (idTableIndex == TI_NULLIDX)
 			{
 				if (lextable.declaredFunction())
@@ -175,10 +184,10 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			break;
 		}
 
-		if (token != LEX_STDLIB)
-		{
-			lextable.addEntry(LexTable::Entry(token, lineNumber, idTableIndex));
-		}
+		if (token == LEX_STDLIB)
+			continue;
+
+		lextable.addEntry(LexTable::Entry(token, lineNumber, idTableIndex));
 	}
 
 	if (!lextable.hasLexeme(LEX_MAIN))
