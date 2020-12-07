@@ -128,7 +128,7 @@ namespace GRB {
 				Rule::Chain(6, TS('p'), TS('i'), TS('('), NS('W'), TS(')'), TS(';')),
 
 				Rule::Chain(6, TS('I'), NS('E'), TS('{'), NS('N'), TS('}'), NS('N')),
-				Rule::Chain(9, TS('I'), NS('E'), TS('{'), NS('N'), TS('}'), TS('E'), TS('{'), NS('N'), TS('}'))
+				Rule::Chain(10, TS('I'), NS('E'), TS('{'), NS('N'), TS('}'), TS('E'), TS('{'), NS('N'), TS('}'), NS('N'))
 			),
 			Rule(NS('E'), GRB_ERROR_SERIES + 2,
 				9,
