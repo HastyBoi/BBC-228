@@ -103,27 +103,28 @@ const std::string TTM::IdTable::dumpTable(size_t startIndex, size_t endIndex) co
 		endIndex = std::clamp(endIndex, startIndex, m_table.size());
 	}
 
-	output << std::setw(5) << "index" << std::setw(20) << "name" << std::setw(20) << "scope"
-		<< std::setw(10) << "type" << std::setw(10) << "id type" << std::setw(20) << "lexTable index" << '\n';
+	output << std::setw(5) << "index " << std::setw(15) << "name " << std::setw(15) << "scope "
+		<< std::setw(8) << "type " << std::setw(15) << "value " << std::setw(20) << "id type " << std::setw(20) << "lexTable index " << '\n';
 	for (size_t i = startIndex; i < endIndex; ++i)
 	{
-		output << std::setw(4) << i << std::setw(20) << m_table[i].name << std::setw(20) << m_table[i].scope << std::setw(10);
+		output << std::setw(5) << i << std::setw(15) << m_table[i].name << std::setw(15) << m_table[i].scope
+			<< std::setw(8);
 		if (m_table[i].dataType == it::data_type::i32)
-			output << "i32 ";
+			output << "i32 " << std::setw(15) << m_table[i].value.intValue;
 		else if (m_table[i].dataType == it::data_type::str)
-			output << "str ";
+			output << "str " << std::setw(15) << m_table[i].value.strValue.string;
 
-		output << std::setw(10);
+		output << std::setw(20);
 		if (m_table[i].idType == it::id_type::function)
-			output << "f ";
+			output << "function";
 		else if (m_table[i].idType == it::id_type::literal)
-			output << "l ";
+			output << "literal";
 		else if (m_table[i].idType == it::id_type::parameter)
-			output << "p ";
+			output << "parameter";
 		else if (m_table[i].idType == it::id_type::variable)
-			output << "v ";
+			output << "variable";
 
-		output << std::setw(15) << m_table[i].lexTableIndex;
+		output << std::setw(20) << m_table[i].lexTableIndex;
 		output << '\n';
 	}
 

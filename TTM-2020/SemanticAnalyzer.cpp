@@ -8,9 +8,9 @@ TTM::SemanticAnalyzer::SemanticAnalyzer(LexTable& lextable, IdTable& idtable)
 
 void TTM::SemanticAnalyzer::Start(Logger& log)
 {
-	/*checkTypeMismatch();
+	checkTypeMismatch();
 	checkAccessingOutOfScopeId();
-	checkArgumentsMismatch();*/
+	checkArgumentsMismatch();
 }
 
 void TTM::SemanticAnalyzer::checkTypeMismatch()
@@ -21,6 +21,8 @@ void TTM::SemanticAnalyzer::checkTypeMismatch()
 		{
 			if (idtable[lextable[i - 1].idTableIndex].dataType != idtable[lextable[i + 1].idTableIndex].dataType)
 				throw ERROR_THROW_IN(706, lextable[i].lineNumber, -1);
+
+			//idtable[lextable[i].idTableIndex].value = idtable[lextable[i + 1].idTableIndex].value;
 		}
 	}
 }
