@@ -63,24 +63,29 @@ int main(int argc, char** argv)
 		SemanticAnalyzer semanticAnalyzer{ lextable, idtable };
 		semanticAnalyzer.Start(log);
 
+		PolishNotation(lextable, idtable);
+		std::cout << lextable.dumpTable() << '\n';
+
 		if (commandLineArguments.lexTableFilePath())
 		{
 			std::ofstream lexTableFile(commandLineArguments.lexTableFilePath());
 			lexTableFile << lextable.dumpTable();
 			lexTableFile.close();
+			log << "Таблица лексем записана в файл\n";
 		}
 		if (commandLineArguments.idTableFilePath())
 		{
 			std::ofstream idTableFile(commandLineArguments.idTableFilePath());
 			idTableFile << idtable.dumpTable();
 			idTableFile.close();
+			log << "Таблица идентификаторов записана в файл\n";
 		}
-
 		if (commandLineArguments.traceFilePath())
 		{
 			std::ofstream traceFile(commandLineArguments.traceFilePath());
 			traceFile << syntaxAnalyzer.dumpTrace();
 			traceFile.close();
+			log << "Синтаксический разбор записан в файл\n";
 		}
 
 		log.closeFile();

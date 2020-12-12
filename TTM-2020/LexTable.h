@@ -83,6 +83,11 @@ namespace TTM
 
 		int lexemeCount(char lexeme) const;
 
+		Entry& operator[](size_t index)
+		{
+			return m_table[index];
+		}
+
 		const Entry& operator[](size_t index) const
 		{
 			return m_table[index];

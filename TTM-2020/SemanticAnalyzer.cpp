@@ -8,9 +8,9 @@ TTM::SemanticAnalyzer::SemanticAnalyzer(LexTable& lextable, IdTable& idtable)
 
 void TTM::SemanticAnalyzer::Start(Logger& log)
 {
-	checkTypeMismatch();
+	/*checkTypeMismatch();
 	checkAccessingOutOfScopeId();
-	checkArgumentsMismatch();
+	checkArgumentsMismatch();*/
 }
 
 void TTM::SemanticAnalyzer::checkTypeMismatch()

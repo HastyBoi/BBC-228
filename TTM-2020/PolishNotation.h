@@ -2,7 +2,21 @@
 #include "LexTable.h"
 #include "IdTable.h"
 
-#define POLISH_FUNCTION '@'
 #define FORBIDDEN_SYMBOL '\0'
 
-//bool PolishNotation(int lextable_pos, TTM::LexTable& lextable, IT::IdTable& idtable);
+namespace TTM
+{
+	class PolishNotation
+	{
+	public:
+		PolishNotation(LexTable& lextable, IdTable& idtable);
+
+	private:
+		LexTable& lextable;
+		IdTable& idtable;
+
+		int getOperationsPriority(char operation);
+		bool shokk(int startIndex);
+		std::vector<LexTable::Entry> convert(const std::vector<LexTable::Entry>& entries);
+	};
+}

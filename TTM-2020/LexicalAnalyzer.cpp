@@ -31,7 +31,8 @@ char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 	};
 
 	for (int i = 0; i < size; ++i) {
-		if (execute(str, nanomachinesSon[i])) {
+		if (execute(str, nanomachinesSon[i]))
+		{
 			return tokens[i];
 		}
 	}
@@ -145,7 +146,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			idTableIndex = idtable.getLiteralIndexByValue(atoi(name.c_str()));
 			if (idTableIndex == TI_NULLIDX)
 			{
-				idTableIndex = idtable.addEntry({ "L" + std::to_string(lextable.size()), "", lextable.size(), type::i32, id_t::literal, name.c_str() });
+				idTableIndex = idtable.addEntry({ "L" + name, "", lextable.size(), type::i32, id_t::literal, name.c_str() });
 			}
 			token = LEX_LITERAL;
 			break;
@@ -164,7 +165,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			idTableIndex = idtable.getLiteralIndexByValue(name.c_str());
 			if (idTableIndex == TI_NULLIDX)
 			{
-				idTableIndex = idtable.addEntry({ "L" + std::to_string(lextable.size()), "", lextable.size(), type::str, id_t::literal, name.c_str() });
+				idTableIndex = idtable.addEntry({ "L" + name.substr(1,name.size() - 2), "", lextable.size(), type::str, id_t::literal, name.c_str() });
 			}
 			token = LEX_LITERAL;
 			break;

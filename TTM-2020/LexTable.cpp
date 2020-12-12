@@ -34,7 +34,11 @@ const std::string TTM::LexTable::dumpTable(size_t startIndex, size_t endIndex) c
 
 	for (size_t i = startIndex; i < endIndex; ++i)
 	{
-		output << std::setw(4) << i << std::setw(18) << '\'' << m_table[i].lexeme << '\'';
+		output << std::setw(4) << i;
+		if (m_table[i].lexeme)
+		{
+			output << std::setw(18) << '\'' << m_table[i].lexeme << '\'';
+		}
 		if (m_table[i].idTableIndex != TI_NULLIDX)
 		{
 			output << std::setw(19) << m_table[i].idTableIndex;

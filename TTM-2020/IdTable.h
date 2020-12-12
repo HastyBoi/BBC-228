@@ -54,6 +54,11 @@ namespace TTM
 
 		const std::string dumpTable(size_t startIndex = 0, size_t endIndex = 0) const;
 
+		Entry& operator[](size_t index)
+		{
+			return m_table[index];
+		}
+
 		const Entry& operator[](size_t index) const
 		{
 			return m_table[index];
