@@ -14,8 +14,12 @@ namespace TTM
 		LexTable& lextable;
 		IdTable& idtable;
 
-		void checkTypeMismatch();
-		void checkAccessingOutOfScopeId();
-		void checkArgumentsMismatch();
+		std::map<std::string, std::vector<it::data_type>> functionParameters;
+
+		void checkAssignmentTypeMismatch();
+		void checkReturnTypeMismatch();
+		void checkArgumentsAmountMismatch();
+
+		void getAllFunctionParameters();
 	};
 }

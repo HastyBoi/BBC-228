@@ -64,7 +64,6 @@ int main(int argc, char** argv)
 		semanticAnalyzer.Start(log);
 
 		PolishNotation(lextable, idtable);
-		std::cout << lextable.dumpTable() << '\n';
 
 		if (commandLineArguments.lexTableFilePath())
 		{
