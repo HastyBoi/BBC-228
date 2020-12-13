@@ -58,16 +58,7 @@ void TTM::Generator::Data()
 	{
 		if (idtable[i].idType == it::id_type::variable)
 		{
-			outFile << getFullName(i) << " DWORD ";
-			if (idtable[i].dataType == it::data_type::i32)
-			{
-				outFile << idtable[i].value.intValue;
-			}
-			else if (idtable[i].dataType == it::data_type::str)
-			{
-				outFile << idtable[i].value.strValue.string;
-			}
-			outFile << '\n';
+			outFile << getFullName(i) << " DWORD 0\n";
 		}
 	}
 }
@@ -104,7 +95,6 @@ void TTM::Generator::Code()
 				++i;
 			}
 			outFile << '\n';
-
 			break;
 
 		case LEX_ECHO:

@@ -49,6 +49,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 	std::string previousScope = currentScope;
 	std::string lastFunctionName = "";
 
+	int literalsCounter = 0;
 	id_t idType = id_t::unknown;
 	type dataType = type::undefined;
 
@@ -142,15 +143,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 
 			break;
 
-		case LEX_INTEGER_LITERAL:
-			idTableIndex = idtable.getLiteralIndexByValue(atoi(name.c_str()));
-			if (idTableIndex == TI_NULLIDX)
-			{
-				idTableIndex = idtable.addEntry({ "L" + name, "", lextable.size(), type::i32, id_t::literal, name.c_str() });
-			}
-			token = LEX_LITERAL;
-			break;
-
 		case LEX_I32:
 			dataType = type::i32;
 			token = LEX_DATATYPE;
@@ -161,11 +153,22 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			token = LEX_DATATYPE;
 			break;
 
+		case LEX_INTEGER_LITERAL:
+			idTableIndex = idtable.getLiteralIndexByValue(atoi(name.c_str()));
+			if (idTableIndex == TI_NULLIDX)
+			{
+				idTableIndex = idtable.addEntry({ "L" + std::to_string(literalsCounter), "", lextable.size(), type::i32, id_t::literal, name.c_str() });
+				++literalsCounter;
+			}
+			token = LEX_LITERAL;
+			break;
+
 		case LEX_STRING_LITERAL:
 			idTableIndex = idtable.getLiteralIndexByValue(name.c_str());
 			if (idTableIndex == TI_NULLIDX)
 			{
-				idTableIndex = idtable.addEntry({ "L" + name.substr(1,name.size() - 2), "", lextable.size(), type::str, id_t::literal, name.c_str() });
+				idTableIndex = idtable.addEntry({ "L" + std::to_string(literalsCounter), "", lextable.size(), type::str, id_t::literal, name.c_str() });
+				++literalsCounter;
 			}
 			token = LEX_LITERAL;
 			break;
