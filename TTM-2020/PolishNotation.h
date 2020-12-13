@@ -16,7 +16,7 @@ namespace TTM
 		IdTable& idtable;
 
 		int getOperationsPriority(char operation);
-		bool shokk(int startIndex);
-		std::vector<LexTable::Entry> convert(const std::vector<LexTable::Entry>& entries);
+		bool convert(int startIndex);
+		std::vector<LexTable::Entry> getPostfixExpression(const std::vector<LexTable::Entry>& entries);
 	};
 }

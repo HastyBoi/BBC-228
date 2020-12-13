@@ -6,9 +6,9 @@ TTM::PolishNotation::PolishNotation(LexTable& lextable, IdTable& idtable)
 {
 	for (int i = 0; i < lextable.size(); ++i)
 	{
-		if (lextable[i].lexeme == LEX_ASSIGN)
+		if (lextable[i].lexeme == LEX_ASSIGN || lextable[i].lexeme == LEX_RET)
 		{
-			shokk(i);
+			convert(i + 1);
 		}
 	}
 }
@@ -24,12 +24,12 @@ int TTM::PolishNotation::getOperationsPriority(char operation)
 	return EOF;
 }
 
-bool TTM::PolishNotation::shokk(int startIndex)
+bool TTM::PolishNotation::convert(int startIndex)
 {
 	std::vector<LexTable::Entry> infixExpressionEntries;
 	int operandsCounter = 0, operationsCounter = 0;
 
-	for (int i = startIndex + 1; i < lextable.size() && lextable[i - 1].lexeme != LEX_SEMICOLON; ++i)
+	for (int i = startIndex; i < lextable.size() && lextable[i - 1].lexeme != LEX_SEMICOLON; ++i)
 	{
 		char& lexeme = lextable[i].lexeme;
 		if (lextable[i].idTableIndex != TI_NULLIDX && idtable[lextable[i].idTableIndex].idType == it::id_type::function)
@@ -55,20 +55,20 @@ bool TTM::PolishNotation::shokk(int startIndex)
 	if (operandsCounter - operationsCounter != 1)
 		return false;
 
-	std::vector<LexTable::Entry> postfixExpressionEntries = convert(infixExpressionEntries);
+	std::vector<LexTable::Entry> postfixExpressionEntries = getPostfixExpression(infixExpressionEntries);
 	for (size_t i = 0; i < infixExpressionEntries.size(); ++i) {
 		if (i < postfixExpressionEntries.size()) {
-			lextable[i + startIndex + 1] = postfixExpressionEntries[i];
+			lextable[i + startIndex] = postfixExpressionEntries[i];
 		}
 		else {
-			lextable[i + startIndex + 1] = { FORBIDDEN_SYMBOL, EOF, EOF };
+			lextable[i + startIndex] = { FORBIDDEN_SYMBOL, EOF, EOF };
 		}
 	}
 
 	return true;
 }
 
-std::vector<TTM::LexTable::Entry> TTM::PolishNotation::convert(const std::vector<LexTable::Entry>& entries)
+std::vector<TTM::LexTable::Entry> TTM::PolishNotation::getPostfixExpression(const std::vector<LexTable::Entry>& entries)
 {
 	std::vector<LexTable::Entry> output;
 	output.reserve(entries.size());

@@ -75,89 +75,16 @@ void TTM::Generator::Data()
 void TTM::Generator::Code()
 {
 	outFile << "\n.code\n";
-	int assignToVariableAtIndex = 0;
 	std::string lastFunctionName = "";
+	int parametersCount = 0;
 
 	for (int i = 0; i < lextable.size(); ++i)
 	{
 		switch (lextable[i].lexeme)
 		{
 		case LEX_ASSIGN:
-			assignToVariableAtIndex = i - 1;
-			while (lextable[i].lexeme != LEX_SEMICOLON)
-			{
-				if (lextable[i].lexeme == LEX_ID)
-				{
-					outFile << "push " << getFullName(lextable[i].idTableIndex) << '\n';
-				}
-				else if (lextable[i].lexeme == LEX_LITERAL)
-				{
-					outFile << "push ";
-					if (idtable[lextable[i].idTableIndex].dataType == it::data_type::str)
-					{
-						outFile << "offset ";
-					}
-
-					outFile << getFullName(lextable[i].idTableIndex) << '\n';
-				}
-				else if (lextable[i].lexeme == LEX_FUNCTION_CALL)
-				{
-					/*outFile << "call " << getFullName(i) << '\n'
-						<< "push eax";*/
-				}
-				else if (lextable[i].lexeme == LEX_PLUS)
-				{
-					outFile << "pop eax\n"
-						<< "pop ebx\n"
-						<< "add eax, ebx\n"
-						<< "push eax\n";
-				}
-				else if (lextable[i].lexeme == LEX_MINUS)
-				{
-					outFile << "pop eax\n"
-						<< "pop ebx\n"
-						<< "sub eax, ebx\n"
-						<< "push eax\n";
-				}
-				else if (lextable[i].lexeme == LEX_ASTERISK)
-				{
-					outFile << "pop eax\n"
-						<< "pop ebx\n"
-						<< "mul ebx\n"
-						<< "push eax\n";
-				}
-				else if (lextable[i].lexeme == LEX_SLASH)
-				{
-					outFile << "pop ebx\n"
-						<< "mov edx, 0\n"
-						<< "pop eax\n"
-						<< ".if ebx == 0\n"
-						<< "push offset _DIVIDE_BY_ZERO_EXCEPTION\n"
-						<< "call echoStr\n"
-						<< "invoke ExitProcess, -1\n"
-						<< ".endif\n"
-						<< "div ebx\n"
-						<< "push eax\n";
-				}
-				else if (lextable[i].lexeme == LEX_PERCENT)
-				{
-					outFile << "pop ebx\n"
-						<< "mov edx, 0\n"
-						<< "pop eax\n"
-						<< ".if ebx == 0\n"
-						<< "push offset _DIVIDE_BY_ZERO_EXCEPTION\n"
-						<< "call echoStr\n"
-						<< "invoke ExitProcess, -1\n"
-						<< ".endif\n"
-						<< "div ebx\n"
-						<< "push edx\n";
-				}
-
-				++i;
-			}
-
-			outFile << "pop " << getFullName(lextable[assignToVariableAtIndex].idTableIndex) << '\n';
-
+			outFile << doOperations(i + 1);
+			outFile << "pop " << getFullName(lextable[i - 1].idTableIndex) << '\n';
 			break;
 
 		case LEX_FN:
@@ -168,7 +95,10 @@ void TTM::Generator::Code()
 			{
 				if (lextable[i].lexeme == LEX_ID && idtable[lextable[i].idTableIndex].idType != it::id_type::function)
 				{
-					outFile << getFullName(lextable[i].idTableIndex) << " : DWORD ";
+					parametersCount += 4;
+					outFile << getFullName(lextable[i].idTableIndex) << " : DWORD";
+					if (lextable[i + 1].lexeme != LEX_CLOSING_PARENTHESIS)
+						outFile << ", ";
 				}
 
 				++i;
@@ -194,11 +124,16 @@ void TTM::Generator::Code()
 			break;
 
 		case LEX_RET:
-			outFile << "push " << getFullName(lextable[i + 1].idTableIndex) << '\n';
+			outFile << doOperations(i + 1);
 
 			if (lastFunctionName == "_main")
 			{
 				outFile << "call ExitProcess\n";
+			}
+			else
+			{
+				outFile << "ret " << parametersCount << '\n';
+				parametersCount = 0;
 			}
 			outFile << lastFunctionName << " ENDP\n\n";
 			break;
@@ -226,5 +161,84 @@ std::string TTM::Generator::includeStdlib()
 		<< "parseInt PROTO : DWORD\n"
 		<< "concat PROTO : DWORD\n";
 
+	return output.str();
+}
+
+std::string TTM::Generator::doOperations(int startIndex)
+{
+	std::stringstream output;
+	for (int i = startIndex; i < lextable.size() && lextable[i].lexeme != LEX_SEMICOLON; ++i)
+	{
+		if (lextable[i].lexeme == LEX_ID)
+		{
+			output << "push " << getFullName(lextable[i].idTableIndex) << '\n';
+		}
+		else if (lextable[i].lexeme == LEX_LITERAL)
+		{
+			output << "push ";
+			if (idtable[lextable[i].idTableIndex].dataType == it::data_type::str)
+			{
+				output << "offset ";
+			}
+
+			output << getFullName(lextable[i].idTableIndex) << '\n';
+		}
+		else if (lextable[i].lexeme == LEX_FUNCTION_CALL)
+		{
+			for (int j = 0; j < lextable[i + 1].lexeme - '0'; ++j)
+			{
+				//output << "push " << getFullName(lextable[i - 1 - j].idTableIndex) << '\n';
+			}
+			output << "call " << getFullName(lextable[i].idTableIndex) << '\n';
+			output << "push eax\n";
+		}
+		else if (lextable[i].lexeme == LEX_PLUS)
+		{
+			output << "pop eax\n"
+				<< "pop ebx\n"
+				<< "add eax, ebx\n"
+				<< "push eax\n";
+		}
+		else if (lextable[i].lexeme == LEX_MINUS)
+		{
+			output << "pop eax\n"
+				<< "pop ebx\n"
+				<< "sub eax, ebx\n"
+				<< "push eax\n";
+		}
+		else if (lextable[i].lexeme == LEX_ASTERISK)
+		{
+			output << "pop eax\n"
+				<< "pop ebx\n"
+				<< "mul ebx\n"
+				<< "push eax\n";
+		}
+		else if (lextable[i].lexeme == LEX_SLASH)
+		{
+			output << "pop ebx\n"
+				<< "mov edx, 0\n"
+				<< "pop eax\n"
+				<< ".if ebx == 0\n"
+				<< "push offset _DIVIDE_BY_ZERO_EXCEPTION\n"
+				<< "call echoStr\n"
+				<< "invoke ExitProcess, -1\n"
+				<< ".endif\n"
+				<< "div ebx\n"
+				<< "push eax\n";
+		}
+		else if (lextable[i].lexeme == LEX_PERCENT)
+		{
+			output << "pop ebx\n"
+				<< "mov edx, 0\n"
+				<< "pop eax\n"
+				<< ".if ebx == 0\n"
+				<< "push offset _DIVIDE_BY_ZERO_EXCEPTION\n"
+				<< "call echoStr\n"
+				<< "invoke ExitProcess, -1\n"
+				<< ".endif\n"
+				<< "div ebx\n"
+				<< "push edx\n";
+		}
+	}
 	return output.str();
 }

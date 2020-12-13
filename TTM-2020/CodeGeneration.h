@@ -26,5 +26,6 @@ namespace TTM
 
 		std::string getFullName(int index);
 		std::string includeStdlib();
+		std::string doOperations(int startIndex);
 	};
 }

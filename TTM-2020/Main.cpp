@@ -14,14 +14,6 @@
 #include "CodeGeneration.h"
 #include "LexicalAnalyzer.h"
 
-//static int allocCount = 0;
-
-//void* operator new(size_t sz)
-//{
-//	allocCount++;
-//	return malloc(sz);
-//}
-
 int main(int argc, char** argv)
 {
 	using namespace TTM;
