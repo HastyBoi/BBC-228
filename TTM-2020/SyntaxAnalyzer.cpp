@@ -63,22 +63,6 @@ std::string TTM::SyntaxAnalyzer::getCTape(short pos, short n) {
 	return output;
 }
 
-std::string TTM::SyntaxAnalyzer::getDiagnosis(short n) {
-	std::string output = "";
-	std::stringstream ss;
-	int errid = 0;
-	int lpos = -1;
-
-	if (n < MFST_DIAGN_NUMBER && (lpos = diagnosis[n].m_tape_position) >= 0) {
-		errid = greibach.getRule(diagnosis[n].m_nrule).iderror;
-		Error::ERROR err = Error::getErrorByCode(errid);
-		ss << err.id << ": строка " << lextable[lpos].lineNumber << ", " << err.message;
-		output = ss.str();
-	}
-
-	return output;
-}
-
 bool TTM::SyntaxAnalyzer::save_state() {
 	m_storestate.push(MfstState(m_tape_position, m_stack, m_nrule, m_nrulechain));
 	MFST_TRACE6("SAVESTATE:", m_storestate.size());
@@ -174,7 +158,7 @@ bool TTM::SyntaxAnalyzer::Start(Logger& log) {
 
 	case SyntaxAnalyzer::RC_STEP::NS_NORULE:
 		MFST_TRACE4("------>NS_NORULE");
-		log << getDiagnosis(0) << '\n';
+		throw ERROR_THROW(greibach.getRule(diagnosis[0].m_nrule).iderror);
 		break;
 
 	case SyntaxAnalyzer::RC_STEP::NS_NORULECHAIN:

@@ -114,7 +114,6 @@ namespace TTM
 
 		std::string getCSt();
 		std::string getCTape(short pos, short n = 25);
-		std::string getDiagnosis(short n);
 		bool save_state();
 		bool restore_state();
 		bool push_chain(GRB::Rule::Chain chain);
