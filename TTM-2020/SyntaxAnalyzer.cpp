@@ -194,18 +194,22 @@ bool TTM::SyntaxAnalyzer::savediagnosis(RC_STEP rc_step) {
 	return output;
 }
 
-void TTM::SyntaxAnalyzer::printrules() {
+std::string TTM::SyntaxAnalyzer::getRules() {
 	MfstState state;
 	GRB::Rule rule;
 	for (unsigned short k = 0; k < m_storestate.size(); k++)
 	{
 		state = m_storestate.c[k];
 		rule = greibach.getRule(state.m_nrule);
-		MFST_TRACE7
+		m_rules << std::setw(4) << std::left << state.m_tape_position << ": "
+			<< std::setw(20) << std::left << rule.getCRule(state.m_nrulechain)
+			<< '\n';
 	}
+
+	return m_rules.str();
 }
 
-const std::string TTM::SyntaxAnalyzer::dumpTrace() const
+std::string TTM::SyntaxAnalyzer::dumpTrace() const
 {
 	return m_trace.str();
 }

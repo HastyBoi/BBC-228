@@ -39,10 +39,6 @@
 
 #define MFST_TRACE6(c,k) m_trace<<std::setw(4)<<std::left<<++FST_TRACE_n<<": "<<std::setw(20)<<std::left<<c<<k<<'\n';
 
-#define MFST_TRACE7  m_trace<<std::setw(4)<<std::left<<state.m_tape_position<<": "\
-	<< std::setw(20) << std::left << rule.getCRule(state.m_nrulechain) \
-	<< '\n';
-
 #pragma endregion
 
 template<typename T>
@@ -75,7 +71,8 @@ namespace TTM
 		SyntaxAnalyzer(const TTM::LexTable& lextable, const GRB::Greibach& greibach);
 
 		bool Start(Logger& log);
-		const std::string dumpTrace() const;
+		std::string dumpTrace() const;
+		std::string getRules();
 
 	private:
 		enum class RC_STEP
@@ -111,6 +108,7 @@ namespace TTM
 		MFSTSTACK m_stack;
 		use_container<std::stack<MfstState>> m_storestate;
 		std::stringstream m_trace;
+		std::stringstream m_rules;
 
 		std::string getCSt();
 		std::string getCTape(short pos, short n = 25);
@@ -119,6 +117,5 @@ namespace TTM
 		bool push_chain(GRB::Rule::Chain chain);
 		RC_STEP step();
 		bool savediagnosis(RC_STEP rc_step);
-		void printrules();
 	};
 }
