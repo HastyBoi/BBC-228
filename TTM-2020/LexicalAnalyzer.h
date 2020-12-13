@@ -15,6 +15,7 @@ namespace TTM
 		LexTable& lextable;
 		IdTable& idtable;
 
-		char Tokenize(const std::string& str);
+		char tokenize(const std::string& str);
+		void includeStdlibFunctions();
 	};
 }

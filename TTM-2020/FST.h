@@ -87,29 +87,6 @@ FST::NODE())
 
 #pragma endregion
 
-#pragma region USE
-
-#define FST_USE FST::FST(4,\
-FST::NODE(1, FST::RELATION('u', 1)),\
-FST::NODE(1, FST::RELATION('s', 2)),\
-FST::NODE(1, FST::RELATION('e', 3)),\
-FST::NODE())
-
-#pragma endregion
-
-#pragma region STDLIB
-
-#define FST_STDLIB FST::FST(7,\
-FST::NODE(1, FST::RELATION('s', 1)),\
-FST::NODE(1, FST::RELATION('t', 2)),\
-FST::NODE(1, FST::RELATION('d', 3)),\
-FST::NODE(1, FST::RELATION('l', 4)),\
-FST::NODE(1, FST::RELATION('i', 5)),\
-FST::NODE(1, FST::RELATION('b', 6)),\
-FST::NODE())
-
-#pragma endregion
-
 #pragma region MAIN
 
 #define FST_MAIN FST::FST(5,\

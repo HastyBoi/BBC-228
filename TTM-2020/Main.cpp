@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 		SyntaxAnalyzer syntaxAnalyzer{ lextable, GRB::getGreibach() };
 		syntaxAnalyzer.Start(log);
 
-		std::cout << syntaxAnalyzer.getRules();
+		//std::cout << syntaxAnalyzer.getRules();
 
 		SemanticAnalyzer semanticAnalyzer{ lextable, idtable };
 		semanticAnalyzer.Start(log);

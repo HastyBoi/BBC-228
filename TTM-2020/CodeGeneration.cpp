@@ -21,12 +21,9 @@ void TTM::Generator::Head()
 		<< ".model flat, stdcall\n"
 		<< "includelib libucrt.lib\n"
 		<< "includelib kernel32.lib\n"
-		<< "ExitProcess PROTO : DWORD\n";
-	if (lextable[0].lexeme == LEX_USE)
-	{
-		outFile << includeStdlib();
-	}
-	outFile << "\n.stack 4096\n";
+		<< "ExitProcess PROTO : DWORD\n"
+		<< includeStdlib() << '\n'
+		<< "\n.stack 4096\n";
 }
 
 void TTM::Generator::Constants()

@@ -6,11 +6,11 @@ TTM::LexicalAnalyzer::LexicalAnalyzer(LexTable& lextable, IdTable& idtable)
 	: lextable(lextable), idtable(idtable)
 {	}
 
-char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
+char TTM::LexicalAnalyzer::tokenize(const std::string& str)
 {
 	FST::FST nanomachinesSon[] = {
 		FST_I32, FST_STR, FST_FN, FST_IF, FST_ELSE, FST_LET,
-		FST_RET, FST_ECHO, FST_USE, FST_STDLIB, FST_MAIN,
+		FST_RET, FST_ECHO, FST_MAIN,
 		FST_OPENING_PARENTHESIS, FST_CLOSING_PARENTHESIS, FST_SEMICOLON, FST_COMMA,
 		FST_OPENING_CURLY_BRACE, FST_CLOSING_CURLY_BRACE,
 		FST_PLUS, FST_MINUS, FST_ASTERISK, FST_SLASH, FST_PERCENT,
@@ -21,7 +21,7 @@ char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 	const int size = sizeof(nanomachinesSon) / sizeof(nanomachinesSon[0]);
 	const char tokens[] = {
 		LEX_I32, LEX_STR, LEX_FN, LEX_IF, LEX_ELSE, LEX_LET,
-		LEX_RET, LEX_ECHO, LEX_USE, LEX_STDLIB, LEX_MAIN,
+		LEX_RET, LEX_ECHO, LEX_MAIN,
 		LEX_OPENING_PARENTHESIS, LEX_CLOSING_PARENTHESIS, LEX_SEMICOLON, LEX_COMMA,
 		LEX_OPENING_CURLY_BRACE, LEX_CLOSING_CURLY_BRACE,
 		LEX_PLUS, LEX_MINUS, LEX_ASTERISK, LEX_SLASH, LEX_PERCENT,
@@ -40,6 +40,16 @@ char TTM::LexicalAnalyzer::Tokenize(const std::string& str)
 	return EOF;
 }
 
+void TTM::LexicalAnalyzer::includeStdlibFunctions()
+{
+	idtable.addEntry({ "parseInt", "", TI_NULLIDX, it::data_type::i32, it::id_type::function, "0" });
+	idtable.addEntry({ "s", "parseInt", TI_NULLIDX, it::data_type::str, it::id_type::parameter, "0" });
+
+	idtable.addEntry({ "concat", "", TI_NULLIDX, it::data_type::str, it::id_type::function, "0" });
+	idtable.addEntry({ "a", "concat", TI_NULLIDX, it::data_type::str, it::id_type::parameter, "0" });
+	idtable.addEntry({ "b", "concat", TI_NULLIDX, it::data_type::str, it::id_type::parameter, "0" });
+}
+
 void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& sourceCode, Logger& log)
 {
 	using type = it::data_type;
@@ -53,10 +63,12 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 	id_t idType = id_t::unknown;
 	type dataType = type::undefined;
 
+	includeStdlibFunctions();
+
 	for (size_t i = 0; i < sourceCode.size(); ++i)
 	{
 		const auto& [name, lineNumber] = sourceCode[i];
-		char token = Tokenize(name);
+		char token = tokenize(name);
 		if (token == EOF)
 		{
 			//todo add new error type (output token)
@@ -67,16 +79,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 
 		switch (token)
 		{
-		case LEX_STDLIB:
-			if (lextable.declaredUseStdlib())
-			{
-				idTableIndex = idtable.addEntry({ "parseInt", "", lextable.size(), type::i32, id_t::function, "" });
-				lextable.addEntry({ LEX_ID, lineNumber, idTableIndex });
-				idTableIndex = idtable.addEntry({ "concat", "", lextable.size(), type::str, id_t::function, "" });
-				lextable.addEntry({ LEX_ID, lineNumber, idTableIndex });
-			}
-			break;
-
 		case LEX_MAIN:
 			idTableIndex = idtable.getIdIndexByName("", name);
 			if (idTableIndex == TI_NULLIDX)
@@ -98,7 +100,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			break;
 
 		case LEX_ID:
-			if (i < sourceCode.size() - 1 && Tokenize(sourceCode[i + 1].first) == LEX_OPENING_PARENTHESIS)
+			if (i < sourceCode.size() - 1 && tokenize(sourceCode[i + 1].first) == LEX_OPENING_PARENTHESIS)
 			{
 				idTableIndex = idtable.getIdIndexByName("", name);
 			}
@@ -136,11 +138,10 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 				idType = id_t::unknown;
 				dataType = type::undefined;
 			}
-			else if (lextable.declaredVariable() || lextable.declaredFunction())
+			else if (lextable.declaredVariable() || lextable.declaredFunction() || lextable.declaredDatatype())
 			{
 				throw ERROR_THROW_LEX(123, lineNumber);
 			}
-
 			break;
 
 		case LEX_I32:
@@ -187,9 +188,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 		default:
 			break;
 		}
-
-		if (token == LEX_STDLIB)
-			continue;
 
 		lextable.addEntry(LexTable::Entry(token, lineNumber, idTableIndex));
 	}

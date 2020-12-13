@@ -5,7 +5,17 @@
 TTM::SemanticAnalyzer::SemanticAnalyzer(LexTable& lextable, IdTable& idtable)
 	: lextable(lextable), idtable(idtable)
 {
-	getAllFunctionParametersList();
+	for (int i = 0; i < idtable.size(); ++i)
+	{
+		if (idtable[i].idType == it::id_type::function)
+		{
+			std::string functionName = idtable[i].name;
+			for (int j = i + 1; j < idtable.size() && idtable[j].idType == it::id_type::parameter; ++j)
+			{
+				functionParametersList[functionName].push_back(idtable[j].dataType);
+			}
+		}
+	}
 }
 
 void TTM::SemanticAnalyzer::Start(Logger& log)
@@ -16,18 +26,6 @@ void TTM::SemanticAnalyzer::Start(Logger& log)
 	checkParametersMismatch();
 
 	log << "—емантический анализ выполнен без ошибок\n";
-}
-
-void TTM::SemanticAnalyzer::getAllFunctionParametersList()
-{
-	for (int i = 0; i < idtable.size(); ++i)
-	{
-		if (idtable[i].idType == it::id_type::function)
-		{
-			int index = idtable[idtable.getIdIndexByName("", idtable[i].name)].lexTableIndex + 1;
-			functionParametersList[idtable[i].name] = getFunctionParametersList(index);
-		}
-	}
 }
 
 std::vector<TTM::it::data_type> TTM::SemanticAnalyzer::getFunctionParametersList(int startIndex)
@@ -125,7 +123,7 @@ TTM::it::data_type TTM::SemanticAnalyzer::getNextOperandDataType(int startIndex)
 
 TTM::it::data_type TTM::SemanticAnalyzer::getPreviousOperandDataType(int startIndex) {
 	bool foundParenthesis = false;
-	for (int i = startIndex; i > 0; --i)
+	for (int i = startIndex; i >= 0; --i)
 	{
 		if (lextable[i].lexeme == LEX_CLOSING_PARENTHESIS
 			&& getFunctionDataType(i - 1) != it::data_type::undefined)
@@ -143,7 +141,7 @@ TTM::it::data_type TTM::SemanticAnalyzer::getPreviousOperandDataType(int startIn
 
 TTM::it::data_type TTM::SemanticAnalyzer::getFunctionReturnTypeFromDeclaration(int startIndex)
 {
-	for (int i = startIndex; i > 0; --i)
+	for (int i = startIndex; i >= 0; --i)
 	{
 		if (lextable[i].lexeme == LEX_FN)
 		{
@@ -156,7 +154,7 @@ TTM::it::data_type TTM::SemanticAnalyzer::getFunctionReturnTypeFromDeclaration(i
 
 TTM::it::data_type TTM::SemanticAnalyzer::getFunctionDataType(int startIndex)
 {
-	for (int i = startIndex; i > 0; --i)
+	for (int i = startIndex; i >= 0; --i)
 	{
 		int previousElementIndex = lextable[i - 1].idTableIndex;
 		if (lextable[i].lexeme == LEX_OPENING_PARENTHESIS && previousElementIndex != TI_NULLIDX

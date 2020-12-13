@@ -18,7 +18,6 @@ namespace TTM
 
 		list_t functionParametersList;
 
-		void getAllFunctionParametersList();
 		std::vector<it::data_type> getFunctionParametersList(int startIndex);
 
 		void parametersMismatch(int startIndex);

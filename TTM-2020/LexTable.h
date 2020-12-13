@@ -16,8 +16,6 @@
 #define LEX_LET							'd'
 #define LEX_RET							'r'
 #define LEX_ECHO						'p'
-#define LEX_USE							'u'
-#define LEX_STDLIB						'L'
 #define LEX_MAIN						'm'
 #define LEX_SEMICOLON					';'
 #define LEX_COMMA						','
@@ -56,11 +54,6 @@ namespace TTM
 		LexTable(size_t capacity = 0);
 		void addEntry(const LexTable::Entry& entry);
 		const std::string dumpTable(size_t startIndex = 0, size_t endIndex = 0) const;
-
-		bool declaredUseStdlib() const
-		{
-			return m_table.size() >= 1 && m_table[m_table.size() - 1].lexeme == LEX_USE;
-		}
 
 		bool declaredFunction() const
 		{
