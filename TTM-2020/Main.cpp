@@ -65,6 +65,9 @@ int main(int argc, char** argv)
 
 		PolishNotation(lextable, idtable);
 
+		Generator codeGenerator{ lextable, idtable, commandLineArguments.outFilePath() };
+		codeGenerator.Start(log);
+
 		if (commandLineArguments.lexTableFilePath())
 		{
 			std::ofstream lexTableFile(commandLineArguments.lexTableFilePath());

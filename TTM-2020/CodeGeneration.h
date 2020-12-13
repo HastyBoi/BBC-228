@@ -4,9 +4,27 @@
 #include "Logger.h"
 #include "IdTable.h"
 
-namespace CG
+namespace TTM
 {
-	struct Generator
+	class Generator
 	{
+	public:
+		Generator(LexTable& lextable, IdTable& idtable, const char* outFilePath);
+		void Start(Logger& log);
+
+	private:
+		LexTable& lextable;
+		IdTable& idtable;
+		std::ofstream outFile;
+
+		const char* stdlibPath = "../Debug/stdlib.lib";
+
+		void Head();
+		void Constants();
+		void Data();
+		void Code();
+
+		std::string getFullName(int index);
+		std::string includeStdlib();
 	};
 }
