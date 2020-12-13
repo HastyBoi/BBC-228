@@ -117,7 +117,12 @@ void TTM::Generator::Code()
 				}
 				else if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
 				{
-					outFile << "push offset " << getFullName(lextable[i + 1].idTableIndex)
+					outFile << "push ";
+					if (idtable[lextable[i + 1].idTableIndex].idType == it::id_type::literal)
+					{
+						outFile << "offset ";
+					}
+					outFile << getFullName(lextable[i + 1].idTableIndex)
 						<< "\ncall echoStr\n";
 				}
 			}
@@ -132,7 +137,14 @@ void TTM::Generator::Code()
 			}
 			else
 			{
-				outFile << "ret " << parametersCount << '\n';
+				outFile << "pop ";
+				if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
+				{
+					outFile << "offset ";
+				}
+
+				outFile << "eax \n"
+					<< "ret " << parametersCount << '\n';
 				parametersCount = 0;
 			}
 			outFile << lastFunctionName << " ENDP\n\n";
@@ -185,10 +197,6 @@ std::string TTM::Generator::doOperations(int startIndex)
 		}
 		else if (lextable[i].lexeme == LEX_FUNCTION_CALL)
 		{
-			for (int j = 0; j < lextable[i + 1].lexeme - '0'; ++j)
-			{
-				//output << "push " << getFullName(lextable[i - 1 - j].idTableIndex) << '\n';
-			}
 			output << "call " << getFullName(lextable[i].idTableIndex) << '\n';
 			output << "push eax\n";
 		}
@@ -201,8 +209,8 @@ std::string TTM::Generator::doOperations(int startIndex)
 		}
 		else if (lextable[i].lexeme == LEX_MINUS)
 		{
-			output << "pop eax\n"
-				<< "pop ebx\n"
+			output << "pop ebx\n"
+				<< "pop eax\n"
 				<< "sub eax, ebx\n"
 				<< "push eax\n";
 		}
