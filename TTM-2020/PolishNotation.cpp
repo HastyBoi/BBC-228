@@ -28,6 +28,7 @@ bool TTM::PolishNotation::convert(int startIndex)
 {
 	std::vector<LexTable::Entry> infixExpressionEntries;
 	int operandsCounter = 0, operationsCounter = 0;
+	bool functionParameters = false;
 
 	for (int i = startIndex; i < lextable.size() && lextable[i - 1].lexeme != LEX_SEMICOLON; ++i)
 	{
@@ -35,16 +36,18 @@ bool TTM::PolishNotation::convert(int startIndex)
 		if (lextable[i].idTableIndex != TI_NULLIDX && idtable[lextable[i].idTableIndex].idType == it::id_type::function)
 		{
 			lexeme = LEX_FUNCTION_CALL;
+			functionParameters = true;
+			++operandsCounter;
 		}
-		else if (lexeme == LEX_COMMA)
+		else if (lexeme == LEX_CLOSING_PARENTHESIS && functionParameters)
 		{
-			--operandsCounter;
+			functionParameters = false;
 		}
 		else if (lexeme == LEX_PLUS || lexeme == LEX_MINUS || lexeme == LEX_ASTERISK || lexeme == LEX_SLASH || lexeme == LEX_PERCENT)
 		{
 			++operationsCounter;
 		}
-		else if (lexeme == LEX_ID || lexeme == LEX_LITERAL)
+		else if (!functionParameters && (lexeme == LEX_ID || lexeme == LEX_LITERAL))
 		{
 			++operandsCounter;
 		}
