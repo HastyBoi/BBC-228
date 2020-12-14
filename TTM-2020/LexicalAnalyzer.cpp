@@ -63,6 +63,8 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 	id_t idType = id_t::unknown;
 	type dataType = type::undefined;
 
+	bool unaryMinusCorrection = false;
+
 	includeStdlibFunctions();
 
 	for (size_t i = 0; i < sourceCode.size(); ++i)
@@ -189,11 +191,32 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			currentScope = previousScope;
 			break;
 
+		case LEX_MINUS:
+			if (lextable[i - 1].lexeme == LEX_ASSIGN || lextable[i - 1].lexeme == LEX_OPENING_PARENTHESIS)
+			{
+				lextable.addEntry({ LEX_OPENING_PARENTHESIS, lineNumber, TI_NULLIDX });
+				int tmp = idtable.getLiteralIndexByValue("0");
+				if (tmp == TI_NULLIDX)
+				{
+					tmp = idtable.addEntry({ "L" + std::to_string(literalsCounter), "", lextable.size(), type::i32, id_t::literal, "0" });
+					++literalsCounter;
+				}
+				lextable.addEntry({ LEX_LITERAL, lineNumber, tmp });
+				unaryMinusCorrection = true;
+			}
+			break;
+
 		default:
 			break;
 		}
 
-		lextable.addEntry(LexTable::Entry(token, lineNumber, idTableIndex));
+		lextable.addEntry({ token, lineNumber, idTableIndex });
+
+		if ((token == LEX_LITERAL || token == LEX_ID) && unaryMinusCorrection)
+		{
+			lextable.addEntry({ LEX_CLOSING_PARENTHESIS, lineNumber, TI_NULLIDX });
+			unaryMinusCorrection = false;
+		}
 	}
 
 	if (!lextable.hasLexeme(LEX_MAIN))
