@@ -206,7 +206,7 @@ std::string TTM::Generator::includeStdlib()
 		<< "\n_echoInt PROTO : DWORD\n"
 		<< "_echoStr PROTO : DWORD\n"
 		<< "_parseInt PROTO : DWORD\n"
-		<< "_concat PROTO : DWORD\n";
+		<< "_concat PROTO : DWORD, : DWORD\n";
 
 	return output.str();
 }
