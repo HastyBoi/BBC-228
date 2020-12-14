@@ -12,8 +12,8 @@ namespace TTM
 #define IN_CODE_TABLE \
 			in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::delimiter,in::delimiter, in::F, in::F, in::I, in::F, in::F, \
 			in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, in::F, \
-			in::delimiter, in::O, in::F, in::F, in::F, in::O, in::F, in::Q, in::S, in::S, in::O, in::O, in::S, in::O, in::F, in::O, \
-			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::F, in::S, in::O, in::O, in::O, in::F, \
+			in::delimiter, in::F, in::F, in::F, in::F, in::O, in::F, in::Q, in::S, in::S, in::O, in::O, in::S, in::O, in::F, in::O, \
+			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::F, in::S, in::F, in::O, in::F, in::F, \
 			in::F, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, \
 			in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::F, in::F, in::F, in::F, in::F, \
 			in::F, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, in::T, \
@@ -49,5 +49,7 @@ namespace TTM
 		int m_linesCount;
 		int m_ignoredCharsCount;
 		std::string m_fileText;
+
+		void writeDelimiter();
 	};
 }

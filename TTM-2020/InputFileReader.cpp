@@ -24,10 +24,7 @@ void TTM::InputFileReader::read(const char* inFilePath)
 		{
 			++m_linesCount;
 			column = 0;
-			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
-			{
-				m_fileText.push_back(in::delimiter);
-			}
+			writeDelimiter();
 			m_fileText.push_back(in::endl);
 		}
 		else if (readChar == in::comment)
@@ -62,14 +59,12 @@ void TTM::InputFileReader::read(const char* inFilePath)
 			break;
 
 		case in::O:
-			if (!m_fileText.empty() && m_fileText.back() != in::delimiter && m_codeTable[m_fileText.back()] != in::O)
-			{
-				m_fileText.push_back(in::delimiter);
-			}
+			writeDelimiter();
 			m_fileText.push_back(readChar);
 			break;
 
 		case in::Q:
+			writeDelimiter();
 			do
 			{
 				m_fileText.push_back(readChar);
@@ -81,10 +76,7 @@ void TTM::InputFileReader::read(const char* inFilePath)
 			break;
 
 		case in::S:
-			if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
-			{
-				m_fileText.push_back(in::delimiter);
-			}
+			writeDelimiter();
 			m_fileText.push_back(readChar);
 			m_fileText.push_back(in::delimiter);
 			break;
@@ -102,6 +94,14 @@ void TTM::InputFileReader::read(const char* inFilePath)
 		throw ERROR_THROW(132);
 
 	inputFile.close();
+}
+
+void TTM::InputFileReader::writeDelimiter()
+{
+	if (!m_fileText.empty() && m_fileText.back() != in::delimiter)
+	{
+		m_fileText.push_back(in::delimiter);
+	}
 }
 
 std::vector<std::pair<std::string, int>> TTM::InputFileReader::splitStringByDelimiter(std::string s, char delimiter)
