@@ -246,20 +246,17 @@ std::string TTM::Generator::doOperations(int startIndex)
 	{
 		if (lextable[i].lexeme == LEX_FUNCTION_CALL)
 		{
-			output << "invoke " << getFullName(lextable[i].idTableIndex) << ", ";
+			output << "invoke " << getFullName(lextable[i].idTableIndex);
 			int argumentsCount = lextable[i + 1].lexeme - '0';
 
 			for (int j = argumentsCount; j > 0; --j)
 			{
+				output << ", ";
 				if (lextable[i - j].lexeme == LEX_LITERAL && idtable[lextable[i - j].idTableIndex].dataType == it::data_type::str)
 				{
 					output << "offset ";
 				}
 				output << getFullName(lextable[i - j].idTableIndex);
-				if (j > 1)
-				{
-					output << ", ";
-				}
 			}
 			output << "\npush eax\n";
 		}
