@@ -29,6 +29,7 @@ namespace TTM
 
 		int writeIf(int startIndex);
 		void writeEcho(int startIndex);
-		int functionCallIndex(int startIndex);
+		int getFunctionCallIndex(int startIndex);
+		bool isArgumentOfFunction(int index);
 	};
 }

@@ -211,7 +211,7 @@ std::string TTM::Generator::includeStdlib()
 	return output.str();
 }
 
-int TTM::Generator::functionCallIndex(int startIndex)
+int TTM::Generator::getFunctionCallIndex(int startIndex)
 {
 	for (int i = startIndex; lextable[i].lexeme != LEX_SEMICOLON && lextable[i].lexeme != LEX_PLUS
 		&& lextable[i].lexeme != LEX_MINUS && lextable[i].lexeme != LEX_ASTERISK
@@ -226,37 +226,48 @@ int TTM::Generator::functionCallIndex(int startIndex)
 	return TI_NULLIDX;
 }
 
+bool TTM::Generator::isArgumentOfFunction(int index)
+{
+	int functionCallIndex = getFunctionCallIndex(index);
+	if (functionCallIndex != TI_NULLIDX)
+	{
+		int parametersCount = lextable[functionCallIndex + 1].lexeme - '0';
+		return (functionCallIndex - parametersCount) == index;
+	}
+
+	return false;
+}
+
 std::string TTM::Generator::doOperations(int startIndex)
 {
 	std::stringstream output;
 
 	for (int i = startIndex; lextable[i].lexeme != LEX_SEMICOLON; ++i)
 	{
-		int functionIndex = functionCallIndex(startIndex);
-		if (functionIndex != TI_NULLIDX)
+		if (lextable[i].lexeme == LEX_FUNCTION_CALL)
 		{
-			output << "invoke " << getFullName(lextable[functionIndex].idTableIndex) << ", ";
-			int argumentsCount = lextable[functionIndex + 1].lexeme - '0';
+			output << "invoke " << getFullName(lextable[i].idTableIndex) << ", ";
+			int argumentsCount = lextable[i + 1].lexeme - '0';
 
-			for (int i = argumentsCount; i > 0; --i)
+			for (int j = argumentsCount; j > 0; --j)
 			{
-				if (lextable[functionIndex - i].lexeme == LEX_LITERAL)
+				if (idtable[lextable[i - j].idTableIndex].dataType == it::data_type::str)
 				{
 					output << "offset ";
 				}
-				output << getFullName(lextable[functionIndex - i].idTableIndex);
-				if (i > 1)
+				output << getFullName(lextable[i - j].idTableIndex);
+				if (j > 1)
 				{
 					output << ", ";
 				}
 			}
 			output << "\npush eax\n";
 		}
-		else if (lextable[i].lexeme == LEX_ID)
+		else if (lextable[i].lexeme == LEX_ID && !isArgumentOfFunction(i))
 		{
 			output << "push " << getFullName(lextable[i].idTableIndex) << '\n';
 		}
-		else if (lextable[i].lexeme == LEX_LITERAL)
+		else if (lextable[i].lexeme == LEX_LITERAL && !isArgumentOfFunction(i))
 		{
 			output << "push ";
 			if (idtable[lextable[i].idTableIndex].dataType == it::data_type::str)
@@ -266,11 +277,6 @@ std::string TTM::Generator::doOperations(int startIndex)
 
 			output << getFullName(lextable[i].idTableIndex) << '\n';
 		}
-		/*else if (lextable[i].lexeme == LEX_FUNCTION_CALL)
-		{
-			output << "call " << getFullName(lextable[i].idTableIndex) << '\n';
-			output << "push eax\n";
-		}*/
 		else if (lextable[i].lexeme == LEX_PLUS)
 		{
 			output << "pop eax\n"
