@@ -13,60 +13,27 @@ _concat PROTO : DWORD
 
 .const
 _DIVIDE_BY_ZERO_EXCEPTION BYTE 'деление на 0',0
-_L0 DWORD 1
-_L1 DWORD 2
-_L2 DWORD 228
-_L3 DWORD 1488
-_L4 DWORD 0
+_L0 BYTE '228', 0
+_L1 BYTE 'false', 0
+_L2 DWORD 0
 
 .data
-_mainb DWORD 0
+_maina DWORD 0
 
 .code
-_shok PROC 
-push _L0
-pop eax 
-ret 0
-_shok ENDP
-
-_kok PROC _koka : DWORD
-push _koka
-call _shok
-push eax
-pop eax
-pop ebx
-add eax, ebx
-push eax
-pop eax 
-ret 4
-_kok ENDP
-
 _main PROC 
-push _L1
-call _kok
+push offset _L0
+call _parseInt
 push eax
-push _L1
-pop ebx
-mov edx, 0
-pop eax
-.if ebx == 0
-push offset _DIVIDE_BY_ZERO_EXCEPTION
-call _echoStr
-invoke ExitProcess, -1
-.endif
-div ebx
-push edx
-pop _mainb
-push _L2
-push _L3
-pop ebx
-pop eax
-sub eax, ebx
-push eax
-pop _mainb
-push _mainb
+pop _maina
+.if _maina != 0
+push _maina
 call _echoInt
-push _L4
+.else
+push offset _L1
+call _echoStr
+.endif
+push _L2
 call ExitProcess
 _main ENDP
 

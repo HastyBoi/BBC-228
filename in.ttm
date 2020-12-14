@@ -1,18 +1,13 @@
-fn i32 shok()
-{
-	ret 1;
-}
-
-fn i32 kok(i32 a)
-{
-	ret a+shok();
-}
-
 fn i32 main()
 {
-	let i32 b = kok(2) % 2;
-	b = 228-1488;
-	echo b;
+	let i32 a = parseInt('228');
+
+	if a {
+		echo a;
+	}
+	else {
+		echo 'false';
+	} 
 
 	ret 0;
 }

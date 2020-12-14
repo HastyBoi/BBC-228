@@ -26,5 +26,8 @@ namespace TTM
 		std::string getFullName(int index);
 		std::string includeStdlib();
 		std::string doOperations(int startIndex);
+
+		int writeIf(int startIndex);
+		void writeEcho(int startIndex);
 	};
 }

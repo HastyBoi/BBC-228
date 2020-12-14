@@ -95,24 +95,11 @@ void TTM::Generator::Code()
 			break;
 
 		case LEX_ECHO:
-			if (lextable[i + 1].lexeme == LEX_ID || lextable[i + 1].lexeme == LEX_LITERAL)
-			{
-				if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::i32)
-				{
-					outFile << "push " << getFullName(lextable[i + 1].idTableIndex)
-						<< "\ncall _echoInt\n";
-				}
-				else if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
-				{
-					outFile << "push ";
-					if (idtable[lextable[i + 1].idTableIndex].idType == it::id_type::literal)
-					{
-						outFile << "offset ";
-					}
-					outFile << getFullName(lextable[i + 1].idTableIndex)
-						<< "\ncall _echoStr\n";
-				}
-			}
+			writeEcho(i);
+			break;
+
+		case LEX_IF:
+			i = writeIf(i);
 			break;
 
 		case LEX_RET:
@@ -143,6 +130,67 @@ void TTM::Generator::Code()
 	}
 
 	outFile << "end _main\n";
+}
+
+int TTM::Generator::writeIf(int startIndex)
+{
+	outFile << ".if " << getFullName(lextable[startIndex + 1].idTableIndex) << " != 0\n";
+
+	int i = 0;
+	for (i = startIndex; lextable[i].lexeme != LEX_CLOSING_CURLY_BRACE; ++i)
+	{
+		if (lextable[i].lexeme == LEX_ASSIGN) {
+			outFile << doOperations(i + 1);
+			outFile << "pop " << getFullName(lextable[i - 1].idTableIndex) << '\n';
+		}
+		else if (lextable[i].lexeme == LEX_ECHO)
+		{
+			writeEcho(i);
+		}
+	}
+	if (lextable[i + 1].lexeme == LEX_ELSE)
+	{
+		outFile << ".else\n";
+		for (i = i + 1; lextable[i].lexeme != LEX_CLOSING_CURLY_BRACE; ++i)
+		{
+			if (lextable[i].lexeme == LEX_ASSIGN) {
+				outFile << doOperations(i + 1);
+				outFile << "pop " << getFullName(lextable[i - 1].idTableIndex) << '\n';
+			}
+			else if (lextable[i].lexeme == LEX_ECHO)
+			{
+				writeEcho(i);
+			}
+		}
+	}
+
+	outFile << ".endif\n";
+	return i;
+}
+
+void TTM::Generator::writeEcho(int startIndex)
+{
+	for (int i = startIndex; lextable[i].lexeme != LEX_SEMICOLON; ++i)
+	{
+		if (lextable[i + 1].lexeme == LEX_ID || lextable[i + 1].lexeme == LEX_LITERAL)
+		{
+			if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::i32)
+			{
+				outFile << "push " << getFullName(lextable[i + 1].idTableIndex)
+					<< "\ncall _echoInt\n";
+			}
+			else if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
+			{
+				outFile << "push ";
+				if (idtable[lextable[i + 1].idTableIndex].idType == it::id_type::literal)
+				{
+					outFile << "offset ";
+				}
+				outFile << getFullName(lextable[i + 1].idTableIndex)
+					<< "\ncall _echoStr\n";
+			}
+		}
+	}
 }
 
 std::string TTM::Generator::getFullName(int index)
