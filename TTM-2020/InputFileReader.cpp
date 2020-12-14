@@ -98,6 +98,9 @@ void TTM::InputFileReader::read(const char* inFilePath)
 		}
 	}
 
+	if (std::count(m_fileText.begin(), m_fileText.end(), '\'') % 2 != 0)
+		throw ERROR_THROW(132);
+
 	inputFile.close();
 }
 
