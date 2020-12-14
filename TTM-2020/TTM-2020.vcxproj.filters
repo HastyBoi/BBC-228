@@ -105,4 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\in.ttm">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

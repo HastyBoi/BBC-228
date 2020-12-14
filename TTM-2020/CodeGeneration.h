@@ -17,9 +17,7 @@ namespace TTM
 		IdTable& idtable;
 		std::ofstream outFile;
 
-		//const char* stdlibPath = "../Debug/stdlib.lib";
-		const char* stdlibPath = "E:/TiP/Vs/Unik/LP/TTM-2020/Debug/stdlib.lib";
-
+		const char* stdlibPath = "../Debug/stdlib.lib";
 		void Head();
 		void Constants();
 		void Data();
