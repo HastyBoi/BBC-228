@@ -211,12 +211,48 @@ std::string TTM::Generator::includeStdlib()
 	return output.str();
 }
 
+int TTM::Generator::functionCallIndex(int startIndex)
+{
+	for (int i = startIndex; lextable[i].lexeme != LEX_SEMICOLON && lextable[i].lexeme != LEX_PLUS
+		&& lextable[i].lexeme != LEX_MINUS && lextable[i].lexeme != LEX_ASTERISK
+		&& lextable[i].lexeme != LEX_SLASH && lextable[i].lexeme != LEX_PERCENT; ++i)
+	{
+		if (lextable[i].lexeme == LEX_FUNCTION_CALL)
+		{
+			return i;
+		}
+	}
+
+	return TI_NULLIDX;
+}
+
 std::string TTM::Generator::doOperations(int startIndex)
 {
 	std::stringstream output;
-	for (int i = startIndex; i < lextable.size() && lextable[i].lexeme != LEX_SEMICOLON; ++i)
+
+	for (int i = startIndex; lextable[i].lexeme != LEX_SEMICOLON; ++i)
 	{
-		if (lextable[i].lexeme == LEX_ID)
+		int functionIndex = functionCallIndex(startIndex);
+		if (functionIndex != TI_NULLIDX)
+		{
+			output << "invoke " << getFullName(lextable[functionIndex].idTableIndex) << ", ";
+			int argumentsCount = lextable[functionIndex + 1].lexeme - '0';
+
+			for (int i = argumentsCount; i > 0; --i)
+			{
+				if (lextable[functionIndex - i].lexeme == LEX_LITERAL)
+				{
+					output << "offset ";
+				}
+				output << getFullName(lextable[functionIndex - i].idTableIndex);
+				if (i > 1)
+				{
+					output << ", ";
+				}
+			}
+			output << "\npush eax\n";
+		}
+		else if (lextable[i].lexeme == LEX_ID)
 		{
 			output << "push " << getFullName(lextable[i].idTableIndex) << '\n';
 		}
@@ -230,11 +266,11 @@ std::string TTM::Generator::doOperations(int startIndex)
 
 			output << getFullName(lextable[i].idTableIndex) << '\n';
 		}
-		else if (lextable[i].lexeme == LEX_FUNCTION_CALL)
+		/*else if (lextable[i].lexeme == LEX_FUNCTION_CALL)
 		{
 			output << "call " << getFullName(lextable[i].idTableIndex) << '\n';
 			output << "push eax\n";
-		}
+		}*/
 		else if (lextable[i].lexeme == LEX_PLUS)
 		{
 			output << "pop eax\n"
