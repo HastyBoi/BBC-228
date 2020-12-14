@@ -23,7 +23,7 @@ void TTM::Generator::Head()
 		<< "includelib kernel32.lib\n"
 		<< "ExitProcess PROTO : DWORD\n"
 		<< includeStdlib() << '\n'
-		<< "\n.stack 4096\n";
+		<< ".stack 4096\n";
 }
 
 void TTM::Generator::Constants()
@@ -100,7 +100,7 @@ void TTM::Generator::Code()
 				if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::i32)
 				{
 					outFile << "push " << getFullName(lextable[i + 1].idTableIndex)
-						<< "\ncall echoInt\n";
+						<< "\ncall _echoInt\n";
 				}
 				else if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
 				{
@@ -110,7 +110,7 @@ void TTM::Generator::Code()
 						outFile << "offset ";
 					}
 					outFile << getFullName(lextable[i + 1].idTableIndex)
-						<< "\ncall echoStr\n";
+						<< "\ncall _echoStr\n";
 				}
 			}
 			break;
@@ -155,10 +155,10 @@ std::string TTM::Generator::includeStdlib()
 	std::stringstream output;
 
 	output << "includelib " << stdlibPath
-		<< "\nechoInt PROTO : DWORD\n"
-		<< "echoStr PROTO : DWORD\n"
-		<< "parseInt PROTO : DWORD\n"
-		<< "concat PROTO : DWORD\n";
+		<< "\n_echoInt PROTO : DWORD\n"
+		<< "_echoStr PROTO : DWORD\n"
+		<< "_parseInt PROTO : DWORD\n"
+		<< "_concat PROTO : DWORD\n";
 
 	return output.str();
 }

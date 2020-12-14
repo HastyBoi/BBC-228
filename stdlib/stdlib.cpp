@@ -2,35 +2,35 @@
 
 extern "C"
 {
-	void __stdcall echoInt(int num)
+	void __stdcall _echoInt(int num)
 	{
 		setlocale(LC_ALL, "rus");
 		std::cout << num << '\n';
 	}
 
-	void __stdcall echoStr(const char* str)
+	void __stdcall _echoStr(const char* str)
 	{
 		setlocale(LC_ALL, "rus");
 		std::cout << str << '\n';
 	}
 
-	constexpr bool isNumber(char c) { return c >= '0' && c <= '9'; }
+	constexpr bool _isNumber(char c) { return c >= '0' && c <= '9'; }
 
-	int __stdcall charToInt(char c)
+	int __stdcall _charToInt(char c)
 	{
 		return static_cast<int>(c - '0');
 	}
 
-	int __stdcall parseInt(const char* str)
+	int __stdcall _parseInt(const char* str)
 	{
 		int number = 0;
-		for (int i = 0; str[i] && isNumber(str[i]); ++i)
-			number = (number * 10) + charToInt(str[i]);
+		for (int i = 0; str[i] && _isNumber(str[i]); ++i)
+			number = (number * 10) + _charToInt(str[i]);
 
 		return number;
 	}
 
-	const char* __stdcall concat(const char* str1, const char* str2)
+	const char* __stdcall _concat(const char* str1, const char* str2)
 	{
 		char* buffer = reinterpret_cast<char*>(calloc(strlen(str1) + strlen(str2) + 1, sizeof(char)));
 
