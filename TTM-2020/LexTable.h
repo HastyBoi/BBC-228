@@ -29,12 +29,6 @@
 #define LEX_SLASH						'/'
 #define LEX_PERCENT						'%'
 #define LEX_ASSIGN						'='
-#define LEX_EQUALS						'q'
-#define LEX_NOT_EQUALS					'!'
-#define LEX_LESS						'<'
-#define LEX_GREATER						'>'
-#define LEX_LESS_OR_EQUALS				'o'
-#define LEX_GREATER_OR_EQUALS			'x'
 #pragma endregion
 
 namespace TTM

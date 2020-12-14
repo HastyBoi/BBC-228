@@ -8,30 +8,28 @@ TTM::LexicalAnalyzer::LexicalAnalyzer(LexTable& lextable, IdTable& idtable)
 
 char TTM::LexicalAnalyzer::tokenize(const std::string& str)
 {
-	FST::FST nanomachinesSon[] = {
+	FST::FST fst[] = {
 		FST_I32, FST_STR, FST_FN, FST_IF, FST_ELSE, FST_LET,
 		FST_RET, FST_ECHO, FST_MAIN,
 		FST_OPENING_PARENTHESIS, FST_CLOSING_PARENTHESIS, FST_SEMICOLON, FST_COMMA,
 		FST_OPENING_CURLY_BRACE, FST_CLOSING_CURLY_BRACE,
 		FST_PLUS, FST_MINUS, FST_ASTERISK, FST_SLASH, FST_PERCENT,
-		FST_EQUALS, FST_NOT_EQUALS, FST_LESS_OR_EQUALS, FST_GREATER_OR_EQUALS,
-		FST_ASSIGN, FST_LESS, FST_GREATER,
+		FST_ASSIGN,
 		FST_ID, FST_STRING_LITERAL, FST_INTEGER_LITERAL
 	};
-	const int size = sizeof(nanomachinesSon) / sizeof(nanomachinesSon[0]);
+	const int size = sizeof(fst) / sizeof(fst[0]);
 	const char tokens[] = {
 		LEX_I32, LEX_STR, LEX_FN, LEX_IF, LEX_ELSE, LEX_LET,
 		LEX_RET, LEX_ECHO, LEX_MAIN,
 		LEX_OPENING_PARENTHESIS, LEX_CLOSING_PARENTHESIS, LEX_SEMICOLON, LEX_COMMA,
 		LEX_OPENING_CURLY_BRACE, LEX_CLOSING_CURLY_BRACE,
 		LEX_PLUS, LEX_MINUS, LEX_ASTERISK, LEX_SLASH, LEX_PERCENT,
-		LEX_EQUALS, LEX_NOT_EQUALS, LEX_LESS_OR_EQUALS, LEX_GREATER_OR_EQUALS,
-		LEX_ASSIGN, LEX_LESS, LEX_GREATER,
+		LEX_ASSIGN,
 		LEX_ID, LEX_STRING_LITERAL, LEX_INTEGER_LITERAL
 	};
 
 	for (int i = 0; i < size; ++i) {
-		if (execute(str, nanomachinesSon[i]))
+		if (execute(str, fst[i]))
 		{
 			return tokens[i];
 		}
@@ -90,7 +88,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 				if (dataType != type::i32)
 					throw ERROR_THROW_LEX(121, lineNumber);
 
-				idTableIndex = idtable.addEntry({ name, "", lextable.size(), dataType, id_t::function, "" });
+				idTableIndex = idtable.addEntry({ name, "", lextable.size(), dataType, id_t::function, "0" });
 				idType = id_t::unknown;
 				dataType = type::undefined;
 				lastFunctionName = name;
@@ -136,7 +134,7 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 				if (dataType == type::undefined)
 					throw ERROR_THROW_LEX(121, lineNumber);
 
-				idTableIndex = idtable.addEntry({ name, currentScope, lextable.size(), dataType, idType, "" });
+				idTableIndex = idtable.addEntry({ name, currentScope, lextable.size(), dataType, idType, "0" });
 				idType = id_t::unknown;
 				dataType = type::undefined;
 			}
@@ -192,10 +190,12 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			break;
 
 		case LEX_MINUS:
-			if (lextable[i - 1].lexeme == LEX_ASSIGN || lextable[i - 1].lexeme == LEX_OPENING_PARENTHESIS)
+			if (lextable[lextable.size() - 1].lexeme == LEX_ASSIGN
+				|| lextable[lextable.size() - 1].lexeme == LEX_OPENING_PARENTHESIS
+				|| lextable[lextable.size() - 1].lexeme == LEX_RET)
 			{
 				lextable.addEntry({ LEX_OPENING_PARENTHESIS, lineNumber, TI_NULLIDX });
-				int tmp = idtable.getLiteralIndexByValue("0");
+				int tmp = idtable.getLiteralIndexByValue(0);
 				if (tmp == TI_NULLIDX)
 				{
 					tmp = idtable.addEntry({ "L" + std::to_string(literalsCounter), "", lextable.size(), type::i32, id_t::literal, "0" });
@@ -212,7 +212,8 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 
 		lextable.addEntry({ token, lineNumber, idTableIndex });
 
-		if ((token == LEX_LITERAL || token == LEX_ID) && unaryMinusCorrection)
+		if ((token == LEX_LITERAL || (token == LEX_ID
+			&& idtable[lextable[lextable.size() - 1].idTableIndex].idType != id_t::function)) && unaryMinusCorrection)
 		{
 			lextable.addEntry({ LEX_CLOSING_PARENTHESIS, lineNumber, TI_NULLIDX });
 			unaryMinusCorrection = false;

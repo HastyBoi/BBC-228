@@ -112,7 +112,9 @@ void TTM::Generator::Code()
 			else
 			{
 				outFile << "pop ";
-				if (lextable[i + 1].lexeme == LEX_LITERAL && idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
+				if (lextable[i + 1].lexeme == LEX_LITERAL
+					&& idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str
+					&& !isArgumentOfFunction(i + 1))
 				{
 					outFile << "offset ";
 				}

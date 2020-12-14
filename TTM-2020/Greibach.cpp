@@ -136,7 +136,7 @@ namespace GRB {
 				Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')'))
 			),
 			Rule(NS('M'), GRB_ERROR_SERIES + 3,
-				44,
+				20,
 				Rule::Chain(2, TS('+'), NS('E')),
 				Rule::Chain(4, TS('+'), TS('('), NS('E'), TS(')')),
 				Rule::Chain(5, TS('+'), TS('('), NS('E'), TS(')'), NS('M')),
@@ -160,47 +160,15 @@ namespace GRB {
 				Rule::Chain(2, TS('%'), NS('E')),
 				Rule::Chain(4, TS('%'), TS('('), NS('E'), TS(')')),
 				Rule::Chain(5, TS('%'), TS('('), NS('E'), TS(')'), NS('M')),
-				Rule::Chain(3, TS('%'), NS('E'), NS('M')),
-
-				Rule::Chain(2, TS('q'), NS('E')),
-				Rule::Chain(4, TS('q'), TS('('), NS('E'), TS(')')),
-				Rule::Chain(5, TS('q'), TS('('), NS('E'), TS(')'), NS('M')),
-				Rule::Chain(3, TS('q'), NS('E'), NS('M')),
-
-				Rule::Chain(2, TS('!'), NS('E')),
-				Rule::Chain(4, TS('!'), TS('('), NS('E'), TS(')')),
-				Rule::Chain(5, TS('!'), TS('('), NS('E'), TS(')'), NS('M')),
-				Rule::Chain(3, TS('!'), NS('E'), NS('M')),
-
-				Rule::Chain(2, TS('<'), NS('E')),
-				Rule::Chain(4, TS('<'), TS('('), NS('E'), TS(')')),
-				Rule::Chain(5, TS('<'), TS('('), NS('E'), TS(')'), NS('M')),
-				Rule::Chain(3, TS('<'), NS('E'), NS('M')),
-
-				Rule::Chain(2, TS('>'), NS('E')),
-				Rule::Chain(4, TS('>'), TS('('), NS('E'), TS(')')),
-				Rule::Chain(5, TS('>'), TS('('), NS('E'), TS(')'), NS('M')),
-				Rule::Chain(3, TS('>'), NS('E'), NS('M')),
-
-				Rule::Chain(2, TS('o'), NS('E')),
-				Rule::Chain(4, TS('o'), TS('('), NS('E'), TS(')')),
-				Rule::Chain(5, TS('o'), TS('('), NS('E'), TS(')'), NS('M')),
-				Rule::Chain(3, TS('o'), NS('E'), NS('M')),
-
-				Rule::Chain(2, TS('x'), NS('E')),
-				Rule::Chain(4, TS('x'), TS('('), NS('E'), TS(')')),
-				Rule::Chain(5, TS('x'), TS('('), NS('E'), TS(')'), NS('M')),
-				Rule::Chain(3, TS('x'), NS('E'), NS('M'))
+				Rule::Chain(3, TS('%'), NS('E'), NS('M'))
 			),
 			Rule(NS('F'), GRB_ERROR_SERIES + 4,
-				3,
-				Rule::Chain(),
+				2,
 				Rule::Chain(2, TS('t'), TS('i')),
 				Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F'))
 			),
 			Rule(NS('W'), GRB_ERROR_SERIES + 5,
-				5,
-				Rule::Chain(),
+				4,
 				Rule::Chain(1, TS('i')),
 				Rule::Chain(1, TS('l')),
 				Rule::Chain(3, TS('i'), TS(','), NS('W')),
