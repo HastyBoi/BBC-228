@@ -41,7 +41,7 @@ void TTM::Generator::Constants()
 			}
 			else if (idtable[i].dataType == it::data_type::str)
 			{
-				outFile << " BYTE " << idtable[i].value.strValue.string << ",0";
+				outFile << " BYTE " << idtable[i].value.strValue.string << ", 0";
 			}
 			outFile << '\n';
 		}

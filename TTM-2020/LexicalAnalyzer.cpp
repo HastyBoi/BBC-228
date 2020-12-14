@@ -142,6 +142,10 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			{
 				throw ERROR_THROW_LEX(123, lineNumber);
 			}
+			else if (name == currentScope)
+			{
+				throw ERROR_THROW_LEX(125, lineNumber);
+			}
 			break;
 
 		case LEX_I32:
