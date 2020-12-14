@@ -21,7 +21,7 @@ void TTM::Generator::Head()
 		<< ".model flat, stdcall\n"
 		<< "includelib libucrt.lib\n"
 		<< "includelib kernel32.lib\n"
-		<< "ExitProcess PROTO : DWORD\n"
+		<< "ExitProcess PROTO : SDWORD\n"
 		<< includeStdlib() << '\n'
 		<< ".stack 4096\n";
 }
@@ -37,7 +37,7 @@ void TTM::Generator::Constants()
 			outFile << getFullName(i);
 			if (idtable[i].dataType == it::data_type::i32)
 			{
-				outFile << " DWORD " << idtable[i].value.intValue;
+				outFile << " SDWORD " << idtable[i].value.intValue;
 			}
 			else if (idtable[i].dataType == it::data_type::str)
 			{
@@ -55,7 +55,7 @@ void TTM::Generator::Data()
 	{
 		if (idtable[i].idType == it::id_type::variable)
 		{
-			outFile << getFullName(i) << " DWORD 0\n";
+			outFile << getFullName(i) << " SDWORD 0\n";
 		}
 	}
 }
@@ -84,7 +84,7 @@ void TTM::Generator::Code()
 				if (lextable[i].lexeme == LEX_ID && idtable[lextable[i].idTableIndex].idType != it::id_type::function)
 				{
 					parametersCount += 4;
-					outFile << getFullName(lextable[i].idTableIndex) << " : DWORD";
+					outFile << getFullName(lextable[i].idTableIndex) << " : SDWORD";
 					if (lextable[i + 1].lexeme != LEX_CLOSING_PARENTHESIS)
 						outFile << ", ";
 				}
@@ -203,10 +203,10 @@ std::string TTM::Generator::includeStdlib()
 	std::stringstream output;
 
 	output << "includelib " << stdlibPath
-		<< "\n_echoInt PROTO : DWORD\n"
-		<< "_echoStr PROTO : DWORD\n"
-		<< "_parseInt PROTO : DWORD\n"
-		<< "_concat PROTO : DWORD, : DWORD\n";
+		<< "\n_echoInt PROTO : SDWORD\n"
+		<< "_echoStr PROTO : SDWORD\n"
+		<< "_parseInt PROTO : SDWORD\n"
+		<< "_concat PROTO : SDWORD, : SDWORD\n";
 
 	return output.str();
 }
@@ -308,7 +308,7 @@ std::string TTM::Generator::doOperations(int startIndex)
 				<< "call _echoStr\n"
 				<< "invoke ExitProcess, -1\n"
 				<< ".endif\n"
-				<< "div ebx\n"
+				<< "idiv ebx\n"
 				<< "push eax\n";
 		}
 		else if (lextable[i].lexeme == LEX_PERCENT)
@@ -321,7 +321,7 @@ std::string TTM::Generator::doOperations(int startIndex)
 				<< "call _echoStr\n"
 				<< "invoke ExitProcess, -1\n"
 				<< ".endif\n"
-				<< "div ebx\n"
+				<< "idiv ebx\n"
 				<< "push edx\n";
 		}
 	}
