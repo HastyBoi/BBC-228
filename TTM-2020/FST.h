@@ -98,7 +98,7 @@ FST::NODE())
 
 #pragma endregion
 
-#pragma region LEFTHESIS
+#pragma region OPENING_PARENTHESIS
 
 #define FST_OPENING_PARENTHESIS FST::FST(2,\
 FST::NODE(1, FST::RELATION('(', 1)),\
@@ -106,7 +106,7 @@ FST::NODE())
 
 #pragma endregion
 
-#pragma region RIGHTHESIS
+#pragma region CLOSING_PARENTHESIS
 
 #define FST_CLOSING_PARENTHESIS FST::FST(2,\
 FST::NODE(1, FST::RELATION(')', 1)),\
