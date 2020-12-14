@@ -342,3 +342,5 @@ ASALocalRun/
 healthchecksdb
 
 *.sln.startup.json
+*.ttm
+Generated Code/*.asm

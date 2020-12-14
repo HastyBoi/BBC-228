@@ -1,13 +1,8 @@
 fn i32 main()
 {
-	let i32 a = parseInt('228');
-
-	if a {
-		echo a;
-	}
-	else {
-		echo 'false';
-	} 
+	let str s = 'adin';
+	let str res = concat(s, 'dva');
+	echo res;
 
 	ret 0;
 }
