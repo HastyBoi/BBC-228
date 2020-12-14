@@ -1,8 +1,6 @@
 fn i32 main()
 {
-	let str s = 'adin';
-	let str res = concat(s, 'dva');
+	let str res = klas('pervi ');
 	echo res;
-
 	ret 0;
 }

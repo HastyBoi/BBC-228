@@ -112,7 +112,7 @@ void TTM::Generator::Code()
 			else
 			{
 				outFile << "pop ";
-				if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
+				if (lextable[i + 1].lexeme == LEX_LITERAL && idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
 				{
 					outFile << "offset ";
 				}
@@ -182,7 +182,7 @@ void TTM::Generator::writeEcho(int startIndex)
 			else if (idtable[lextable[i + 1].idTableIndex].dataType == it::data_type::str)
 			{
 				outFile << "push ";
-				if (idtable[lextable[i + 1].idTableIndex].idType == it::id_type::literal)
+				if (lextable[i + 1].lexeme == LEX_LITERAL)
 				{
 					outFile << "offset ";
 				}
@@ -251,7 +251,7 @@ std::string TTM::Generator::doOperations(int startIndex)
 
 			for (int j = argumentsCount; j > 0; --j)
 			{
-				if (idtable[lextable[i - j].idTableIndex].dataType == it::data_type::str)
+				if (lextable[i - j].lexeme == LEX_LITERAL && idtable[lextable[i - j].idTableIndex].dataType == it::data_type::str)
 				{
 					output << "offset ";
 				}
