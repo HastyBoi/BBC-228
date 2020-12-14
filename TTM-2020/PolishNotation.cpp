@@ -77,7 +77,6 @@ std::vector<TTM::LexTable::Entry> TTM::PolishNotation::getPostfixExpression(cons
 	output.reserve(entries.size());
 	std::stack<LexTable::Entry> stack;
 	bool foundFunction = false;
-	int parametersCounter = 0;
 
 	for (const auto& e : entries)
 	{
@@ -122,19 +121,13 @@ std::vector<TTM::LexTable::Entry> TTM::PolishNotation::getPostfixExpression(cons
 			if (!stack.empty() && stack.top().lexeme == LEX_FUNCTION_CALL)
 			{
 				output.push_back(stack.top());
+				output.push_back({ getFunctionParametersCountByName(idtable[stack.top().idTableIndex].name), TI_NULLIDX, TI_NULLIDX });
 				stack.pop();
-				output.push_back({ static_cast<char>(parametersCounter + '0'), TI_NULLIDX, TI_NULLIDX });
 				foundFunction = false;
-				parametersCounter = 0;
 			}
 		}
 		else if (e.lexeme != LEX_SEMICOLON)
 		{
-			if (foundFunction && e.lexeme == LEX_ID || e.lexeme == LEX_LITERAL)
-			{
-				++parametersCounter;
-			}
-
 			output.push_back(e);
 		}
 	}
@@ -148,4 +141,16 @@ std::vector<TTM::LexTable::Entry> TTM::PolishNotation::getPostfixExpression(cons
 	output.push_back(entries.back());
 
 	return output;
+}
+
+char TTM::PolishNotation::getFunctionParametersCountByName(const std::string& functionName)
+{
+	int parametersCount = 0;
+	int index = idtable.getIdIndexByName("", functionName);
+	for (int i = index + 1; idtable[i].idType == it::id_type::parameter; ++i)
+	{
+		++parametersCount;
+	}
+
+	return parametersCount + '0';
 }

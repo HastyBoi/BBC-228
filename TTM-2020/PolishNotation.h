@@ -18,5 +18,6 @@ namespace TTM
 		int getOperationsPriority(char operation);
 		bool convert(int startIndex);
 		std::vector<LexTable::Entry> getPostfixExpression(const std::vector<LexTable::Entry>& entries);
+		char getFunctionParametersCountByName(const std::string& functionName);
 	};
 }
