@@ -1,32 +1,33 @@
-fn i32 findSum ( i32 x , i32 y)
+//контрольный пример
+fn i32 findSum( i32 x , i32 y)
 {
-	ret x+y;
+ret x+y;
 }
 
 fn str msg(str s)
 {
-	let str message = concat(s,s);
-	ret concat(message,s);
+let str message = concat(s,s);
+ret concat(message,s);
 }
 
 fn i32 main()
 {
-	let i32 x = parseInt('2');
-	let i32 sum;
-	sum = findSum(x,3);
-	if sum {
-		echo sum;
-	}
-	else {
-		echo 'ложь';
-	}
-	
-	let str message = msg('hello ');
-	if message {
-		echo message;
-	}
-	else {
-		echo 'empty';
-	}
-	ret 0;
+let i32 x = parseInt('2');
+let i32 sum;
+sum = findSum(x,3);
+if sum {
+echo sum;
+}
+else {
+echo 'ложь';
+}
+
+let str message = msg('hello ');
+if message {
+echo message;
+}
+else {
+echo 'empty';
+}
+ret 0;
 }
