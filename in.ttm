@@ -1,6 +1,12 @@
 fn i32 main()
 {
-	let str res = klas('pervi ');
-	echo res;
+	let str shs;
+
+	if shs {
+		echo shs;
+	} else {
+		echo 'fols';
+	}
+
 	ret 0;
 }

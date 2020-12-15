@@ -18,13 +18,14 @@ int main(int argc, char** argv)
 {
 	using namespace TTM;
 	std::setlocale(LC_ALL, "rus");
+	Logger log{ };
 
 	try
 	{
 		CommandLineArgumentsParser commandLineArguments{ argc, argv };
-		Logger log{ commandLineArguments.logFilePath() };
-
+		log.setLogFilePath(commandLineArguments.logFilePath());
 		log.openFile();
+
 		log << "---- Протокол ------ Дата: ";
 		log << log.getCurrentDateTime() << " ------------\n";
 
@@ -52,8 +53,6 @@ int main(int argc, char** argv)
 		SyntaxAnalyzer syntaxAnalyzer{ lextable, GRB::getGreibach() };
 		syntaxAnalyzer.Start(log);
 
-		//std::cout << syntaxAnalyzer.getRules();
-
 		SemanticAnalyzer semanticAnalyzer{ lextable, idtable };
 		semanticAnalyzer.Start(log);
 
@@ -62,6 +61,7 @@ int main(int argc, char** argv)
 		Generator codeGenerator{ lextable, idtable, commandLineArguments.outFilePath() };
 		codeGenerator.Start(log);
 
+		log << "-----------------------------------------------------------\n";
 		if (commandLineArguments.lexTableFilePath())
 		{
 			std::ofstream lexTableFile(commandLineArguments.lexTableFilePath());
@@ -83,27 +83,33 @@ int main(int argc, char** argv)
 			traceFile.close();
 			log << "Синтаксический разбор записан в файл\n";
 		}
+		if (commandLineArguments.rulesFilePath())
+		{
+			std::ofstream rulesFile(commandLineArguments.rulesFilePath());
+			rulesFile << syntaxAnalyzer.getRules();
+			rulesFile.close();
+			log << "Цепочки правил записаны в файл\n";
+		}
+		log << "-----------------------------------------------------------\n";
 
 		log.closeFile();
+		std::cout << "Работа завершена успешно. Информация записана в файл " << commandLineArguments.logFilePath() << '\n';
 	}
 	catch (Error::ERROR e)
 	{
-		std::cerr << e.message << ' ';
+		std::cerr << "Ошибка. Информация расположена в log-файле\n";
+		log << "[ошибка " << e.id << "] ";
+		log << e.message << ' ';
 		if (e.inext.line > 0)
 		{
-			std::cerr << "строка " << e.inext.line << ' ';
+			log << "строка " << e.inext.line << ' ';
 		}
 		if (e.inext.col > 0)
 		{
-			std::cerr << "позиция " << e.inext.col << ' ';
+			log << "позиция " << e.inext.col << ' ';
 		}
-		std::cerr << '\n';
+		log << '\n';
 	}
 
-#ifdef _DEBUG
-	int hasMemoryLeaks = _CrtDumpMemoryLeaks();
-#else
-	system("pause");
-#endif // _DEBUG
 	return 0;
 }

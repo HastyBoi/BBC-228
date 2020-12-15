@@ -43,7 +43,6 @@ void TTM::IdTable::Entry::setValue(const char* new_value)
 int TTM::IdTable::addEntry(const Entry& entry)
 {
 	if (entry.idType == it::id_type::unknown)
-		//todo add new error type (to pass name)
 		throw ERROR_THROW(120);
 	if (entry.dataType == it::data_type::undefined)
 		throw ERROR_THROW(121);

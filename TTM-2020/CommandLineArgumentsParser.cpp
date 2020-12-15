@@ -29,6 +29,10 @@ TTM::CommandLineArgumentsParser::CommandLineArgumentsParser(int argc, char** arg
 	{
 		m_tracePath = m_inFilePath + '.' + traceKey + ".txt";
 	}
+	if (optionExists(argv + 1, argv + argc, delimiter + rulesKey))
+	{
+		m_rulesPath = m_inFilePath + '.' + rulesKey + ".txt";
+	}
 }
 
 std::vector<std::string> TTM::CommandLineArgumentsParser::getAllParameters() const
@@ -48,7 +52,11 @@ std::vector<std::string> TTM::CommandLineArgumentsParser::getAllParameters() con
 	}
 	if (!m_tracePath.empty())
 	{
-		parameters.push_back(delimiter + idKey + " " + m_tracePath);
+		parameters.push_back(delimiter + traceKey + " " + m_tracePath);
+	}
+	if (!m_rulesPath.empty())
+	{
+		parameters.push_back(delimiter + rulesKey + " " + m_rulesPath);
 	}
 	return parameters;
 }

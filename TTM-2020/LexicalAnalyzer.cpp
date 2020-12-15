@@ -71,7 +71,6 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 		char token = tokenize(name);
 		if (token == EOF)
 		{
-			//todo add new error type (output token)
 			throw ERROR_THROW_LEX(129, lineNumber);
 		}
 
@@ -169,6 +168,9 @@ void TTM::LexicalAnalyzer::Scan(const std::vector<std::pair<std::string, int>>& 
 			break;
 
 		case LEX_STRING_LITERAL:
+			if (name == "''")
+				throw ERROR_THROW_LEX(126, lineNumber);
+
 			idTableIndex = idtable.getLiteralIndexByValue(name.c_str());
 			if (idTableIndex == TI_NULLIDX)
 			{

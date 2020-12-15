@@ -2,45 +2,33 @@
 .model flat, stdcall
 includelib libucrt.lib
 includelib kernel32.lib
-ExitProcess PROTO : DWORD
+ExitProcess PROTO : SDWORD
 includelib ../Debug/stdlib.lib
-_echoInt PROTO : DWORD
-_echoStr PROTO : DWORD
-_parseInt PROTO : DWORD
-_concat PROTO : DWORD, : DWORD
+_echoInt PROTO : SDWORD
+_echoStr PROTO : SDWORD
+_parseInt PROTO : SDWORD
+_concat PROTO : SDWORD, : SDWORD
 
 .stack 4096
 
 .const
 _DIVIDE_BY_ZERO_EXCEPTION BYTE 'деление на 0',0
-_L0 BYTE 'chel ne levi', 0
-_L1 BYTE 'pervi ', 0
-_L2 DWORD 0
+_L0 SDWORD 0
+_L1 BYTE 'fols', 0
 
 .data
-_klasout DWORD 0
-_mainres DWORD 0
+_mainshs SDWORD 0
 
 .code
-_klas PROC _klass : DWORD
-push _klass
-invoke _concat, _klass, _klass
-push eax
-pop _klasout
-push offset _L0
-invoke _concat, _klasout, offset _L0
-push eax
-pop eax 
-ret 4
-_klas ENDP
-
 _main PROC 
-invoke _klas, offset _L1
-push eax
-pop _mainres
-push _mainres
+.if _mainshs != 0
+push _mainshs
 call _echoStr
-push _L2
+.else
+.endif
+push offset _L1
+call _echoStr
+push _L0
 call ExitProcess
 _main ENDP
 

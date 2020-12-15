@@ -11,7 +11,7 @@ extern "C"
 	void __stdcall _echoStr(const char* str)
 	{
 		setlocale(LC_ALL, "rus");
-		std::cout << str << '\n';
+		std::cout << (str ? str : "") << '\n';
 	}
 
 	constexpr bool _isNumber(char c) { return c >= '0' && c <= '9'; }
@@ -23,6 +23,9 @@ extern "C"
 
 	int __stdcall _parseInt(const char* str)
 	{
+		if (str == nullptr)
+			return 0;
+
 		int number = 0;
 		for (int i = 0; str[i] && _isNumber(str[i]); ++i)
 			number = (number * 10) + _charToInt(str[i]);
@@ -32,6 +35,8 @@ extern "C"
 
 	const char* __stdcall _concat(const char* str1, const char* str2)
 	{
+		if (str1 == nullptr || str2 == nullptr)
+			return " ";
 		char* buffer = reinterpret_cast<char*>(calloc(strlen(str1) + strlen(str2) + 1, sizeof(char)));
 
 		if (buffer == nullptr)
